@@ -24,7 +24,7 @@ Line & Line::operator=(const Line & line) {
 void Line::setFromAtoB(const Vector3 & A, const Vector3 & B) {
 	m_O = A;
 	m_d = B-A;
-	if (m_d.length() < 0.00000001f)
+	if (m_d.length() < 0.000001f)
 	{
 		printf("Son el mismo punto.");
 	}
@@ -32,6 +32,7 @@ void Line::setFromAtoB(const Vector3 & A, const Vector3 & B) {
 	{
 		m_d.normalize();
 	}
+
 }
 // @@ TODO: Give the point corresponding to parameter u
 
