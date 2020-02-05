@@ -16,6 +16,12 @@
 //    IINTERSECT intersect
 
 int BSpherePlaneIntersect(const BSphere *bs, Plane *pl) {
+	float distance = pl->distance(bs->m_centre);
+	if (distance <= bs->m_radius){
+		return IINTERSECT;
+	}
+	int side = pl->whichSide(bs->m_centre);
+	return (side == -1) ? -IREJECT : IREJECT;
 
 }
 

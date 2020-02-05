@@ -24,7 +24,7 @@ Line & Line::operator=(const Line & line) {
 void Line::setFromAtoB(const Vector3 & A, const Vector3 & B) {
 	m_O = A;
 	m_d = B-A;
-	if (m_d.length() == 0.0f)
+	if (m_d.length() < 0.00000001f)
 	{
 		printf("Son el mismo punto.");
 	}
@@ -47,9 +47,7 @@ Vector3 Line::at(float u) const {
 
 float Line::paramDistance(const Vector3 & P) const {
 	float res = 0.0f;
-	
-	float dot_DD = m_d.dot(m_d);
-	Vector3 PmenosO = P - m_O;
+	res = m_d.dot(P-m_O)/m_d.dot(m_d);
 
 	return res;
 }
@@ -60,7 +58,7 @@ float Line::paramDistance(const Vector3 & P) const {
 // Where u = paramDistance(P)
 
 float Line::distance(const Vector3 & P) const {
-	float res = (P - (m_O - paramDistance(P)*m_d)).normalize();
+	float res = (P - (m_O + paramDistance(P)*m_d)).length();
 	return res;
 }
 
