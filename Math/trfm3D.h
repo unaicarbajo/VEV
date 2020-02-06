@@ -204,8 +204,8 @@ public:
 
 private:
 	Vector3 m_c1, m_c2, m_c3;
-	Vector3 m_tr;
-	Vector3 m_d;
+	Vector3 m_tr;	//columna 4
+	Vector3 m_d;	//0's
 	float m_scl;
 	float  m_w;
 };

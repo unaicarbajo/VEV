@@ -45,10 +45,48 @@ int  BBoxBBoxIntersect(const BBox *bba, const BBox *bbb ) {
 //   -IREJECT inside
 //    IINTERSECT intersect
 
-int  BBoxPlaneIntersect (const BBox *theBBox, Plane *thePlane) {
+int  BBoxPlaneIntersect (const BBox *theBBox, Plane *thePlane)
+{	
+	//Se realiza comparando la posicion de Vmin y  Vmax con los signos del vector normal del plano (nx y ny)
+	//Diagonal VminVmax		Se desplaza m_min hasta la x de m_max y viceversa
+	float nx = thePlane->m_n.x();
+	float ny = thePlane->m_n.y();
+	float nz = thePlane->m_n.z();
+
+	float minx, miny, minz, maxx, maxy, maxz;
+
+	if (nx < 0){
+		minx = theBBox->m_max.x();
+		maxx = theBBox->m_min.x();
+	}
+	else{
+		maxx = theBBox->m_max.x();
+		minx = theBBox->m_min.x();
+	}
+
+	if (ny < 0){
+		miny = theBBox->m_max.y();
+		maxy = theBBox->m_min.y();
+	}
+	else{
+		maxy = theBBox->m_max.y();
+		miny = theBBox->m_min.y();
+	}
+
+	if (nz < 0){
+		minz = theBBox->m_max.z();
+		maxz = theBBox->m_min.z();
+	}
+	else{
+		maxz = theBBox->m_max.z();
+		minz = theBBox->m_min.z();
+	}
 	
-	int ladoA = thePlane->whichSide(vmin);
-	int ladoB = thePlane->whichSide(vmax);
+	Vector3 min = Vector3(minx,miny,minz);
+	Vector3 max = Vector3(maxx,maxy,maxz);
+
+	int ladoA = thePlane->whichSide(min);
+	int ladoB = thePlane->whichSide(max);
 	if ( ladoA != ladoB)
 	{
 		return IINTERSECT;

@@ -197,7 +197,7 @@ void Trfm3D::clone( const Trfm3D *T ) {	clone(*T); }
 
 Vector3 Trfm3D::transformPoint(const Vector3 & P) const {
 	Vector3 res;
-
+	
 	return res;
 }
 
