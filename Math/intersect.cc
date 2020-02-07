@@ -47,8 +47,9 @@ int  BBoxBBoxIntersect(const BBox *bba, const BBox *bbb ) {
 
 int  BBoxPlaneIntersect (const BBox *theBBox, Plane *thePlane)
 {	
-	//Se realiza comparando la posicion de Vmin y  Vmax con los signos del vector normal del plano (nx y ny)
+	//Se realiza comparando la posicion de Vmin y  Vmax con los signos del vector normal del plano (nx, ny, nz)
 	//Diagonal VminVmax		Se desplaza m_min hasta la x de m_max y viceversa
+	//Se observa individualmente los valores nx, ny y nz
 	float nx = thePlane->m_n.x();
 	float ny = thePlane->m_n.y();
 	float nz = thePlane->m_n.z();

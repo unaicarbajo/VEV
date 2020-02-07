@@ -197,7 +197,9 @@ void Trfm3D::clone( const Trfm3D *T ) {	clone(*T); }
 
 Vector3 Trfm3D::transformPoint(const Vector3 & P) const {
 	Vector3 res;
-	
+	res[0] = P.dot(Vector3(m_c1[0],m_c2[0],m_c3[0]))+m_tr[0];
+	res[1] = P.dot(Vector3(m_c1[1],m_c2[1],m_c3[1]))+m_tr[1];
+	res[0] = P.dot(Vector3(m_c1[2],m_c2[2],m_c3[2]))+m_tr[2];
 	return res;
 }
 
@@ -209,7 +211,9 @@ Vector3 Trfm3D::transformPoint(const Vector3 & P) const {
 
 Vector3 Trfm3D::transformVector(const Vector3 & V) const {
 	Vector3 res;
-
+	res[0] = V.dot(Vector3(m_c1[0],m_c2[0],m_c3[0]));
+	res[1] = V.dot(Vector3(m_c1[1],m_c2[1],m_c3[1]));
+	res[0] = V.dot(Vector3(m_c1[2],m_c2[2],m_c3[2]));
 	return res;
 }
 
@@ -393,10 +397,16 @@ void Trfm3D::setScale(float scale ) {
 }
 
 // @@ TODO: Rotate angle radians about an axis defined by vector and located at point
-//
+// P' = Mt+p * MR * Mt-p * P
+// En los métodos ADD se multiplica la trasformación nueva a la que ya está definida aquí
+// En los métodos SET se "limpia", crea la trasformación
+// this.add(M) = this * M
 
 void Trfm3D::setRotAxis(const Vector3 & V, const Vector3 & P, float angle ) {
 
+	setTrans(P);
+	addRotVec(V,angle);
+	addTrans((-1)*P);
 }
 
 
