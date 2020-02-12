@@ -267,9 +267,14 @@ void Node::addChild(Node *theChild) {
 
 	if (theChild == 0) return;
 	if (m_gObject) {
+		//Tiene objeto geometrico, es nodo hoja, no se puede anadir hijo
+		//Anadir hijo a la lista de hijos del padre de this
 		// node has a gObject, so print warning
+		m_parent->addChild(theChild);
 	} else {
 		// node does not have gObject, so attach child
+		m_children.push_front(theChild);
+
 	}
 }
 
@@ -387,8 +392,26 @@ void Node::draw() {
 		BBoxGL::draw( m_containerWC );
 
 	/* =================== PUT YOUR CODE HERE ====================== */
+	/*	1) Combrobar si tiene objeto geométrico, dibujarlo
+		2) En caso contrario recorrer hijos y dibujarlos, teniendo en cuenta las transformaciones del padre
+		-cada nodo cuenta con m_gObject() con la funcion .draw() asociada
+		*/
+	
+	// @@ TODO: Aplicar transformaciones
+	// m_gObject->applyTrfm(trfm)
+	// hay que ir concatenando transformaciones
+	if (m_gObject){
+		// m_gObject->draw();
+		m_gObject->applyTrfm(m_placement);
+		m_gObject->draw();
 
-
+	}
+	else{
+		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end(); it != end; ++it) {
+        Node *theChild = *it;
+		theChild->addTrfm(m_placement);
+    }
+	}
 	/* =================== END YOUR CODE HERE ====================== */
 
 	// Restore shaders

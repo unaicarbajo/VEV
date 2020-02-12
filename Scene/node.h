@@ -15,7 +15,7 @@
 
 
 class Node {
-
+ 
 public:
 	/**
 	 * Make a deep copy of the subtree starting at this. The created node will
@@ -112,12 +112,12 @@ private:
 	std::string m_name;
 	Node *m_parent; // pointer to parent. root node points to 0
 	std::list<Node *> m_children; // pointers to children
-	GObject *m_gObject;  // 0 if not geometry
+	GObject *m_gObject;  // 0 if not geometry // SI == 0 NO ES NODO HOJA
 	Light   *m_light; // 0 if not light
 	ShaderProgram *m_shader; // 0 if not shader
-	Trfm3D *m_placement; // local transformation to parent node
-	Trfm3D *m_placementWC; // local transformation to world
-	BBox *m_containerWC; // BBox in world coordinates
+	Trfm3D *m_placement; // local transformation to parent node	// LOCAL PROPIA DEL OBJETO
+	Trfm3D *m_placementWC; // local transformation to world // LOCAL PROPIA DEL OBJETO EN EL SISTEMA DE COORDEANADAS DEL MUNDO
+	BBox *m_containerWC; // BBox in world coordinates // BB EN COORDENADAS DEL MUNDO
 	bool m_checkCollision; // if false, don't check collision
 	bool m_isCulled; // whether the node is culled
 	bool m_drawBBox; // whether BBox has to be drawn
