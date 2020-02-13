@@ -274,6 +274,7 @@ void Node::addChild(Node *theChild) {
 	} else {
 		// node does not have gObject, so attach child
 		m_children.push_front(theChild);
+		theChild->m_parent = this;
 
 	}
 }
@@ -346,6 +347,8 @@ void Node::updateBB () {
 //    See Recipe 1 in for knowing how to iterate through children.
 
 void Node::updateWC() {
+
+	//this.m_placementWC.clone(m_placement);
 }
 
 // @@ TODO:
@@ -378,7 +381,11 @@ void Node::updateGS() {
 void Node::draw() {
 	ShaderProgram *prev_shader = 0;
 	RenderState *rs = RenderState::instance();
-
+	// Modelview dentro de RenderState
+	// Contiene:
+	// 		-información de todo el render (visualizador)
+	// 		-información del shader
+	// 		-información de luces
 	if (m_isCulled) return;
 
 	// Set shader (save previous)
@@ -397,21 +404,21 @@ void Node::draw() {
 		-cada nodo cuenta con m_gObject() con la funcion .draw() asociada
 		*/
 	
-	// @@ TODO: Aplicar transformaciones
-	// m_gObject->applyTrfm(trfm)
-	// hay que ir concatenando transformaciones
-	if (m_gObject){
-		// m_gObject->draw();
-		m_gObject->applyTrfm(m_placement);
-		m_gObject->draw();
+	// Crea hueco en pila modelview
+	// Añade transformación del nodo a la pila
+	rs->push(RenderState::modelview);
+	rs->addTrfm(RenderState::modelview, m_placement);
 
+	if (m_gObject){
+		m_gObject->draw();
 	}
 	else{
 		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end(); it != end; ++it) {
-        Node *theChild = *it;
-		theChild->addTrfm(m_placement);
-    }
+			Node *theChild = *it;
+			theChild->draw();
+    	}
 	}
+	rs->pop(RenderState::modelview);
 	/* =================== END YOUR CODE HERE ====================== */
 
 	// Restore shaders
