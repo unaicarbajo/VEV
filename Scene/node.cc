@@ -267,15 +267,16 @@ void Node::addChild(Node *theChild) {
 
 	if (theChild == 0) return;
 	if (m_gObject) {
-		//Tiene objeto geometrico, es nodo hoja, no se puede anadir hijo
-		//Anadir hijo a la lista de hijos del padre de this
+		// Tiene objeto geometrico, es nodo hoja, no se puede anadir hijo
+		// Anadir hijo a la lista de hijos del padre de this
 		// node has a gObject, so print warning
 		m_parent->addChild(theChild);
+		printf("(W) Añadiendo nodo hoja.");
 	} else {
 		// node does not have gObject, so attach child
 		m_children.push_front(theChild);
 		theChild->m_parent = this;
-
+		updateGS();
 	}
 }
 
@@ -301,6 +302,9 @@ void Node::detach() {
 //    - placementWC of node and parents are up-to-date
 
 void Node::propagateBBRoot() {
+	this->updateBB();
+	if (this->m_parent)
+		this->m_parent->propagateBBRoot();
 }
 
 // @@ TODO: auxiliary function
@@ -329,6 +333,17 @@ void Node::propagateBBRoot() {
 //    See Recipe 1 in for knowing how to iterate through children.
 
 void Node::updateBB () {
+	if (m_gObject != 0){	//si es objeto
+		this->m_containerWC->transform(m_placementWC);
+	}
+	else{	//si es padre
+		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end();
+		it != end; ++it) {
+			Node *theChild = *it;
+			this->m_containerWC->include(theChild->m_containerWC); // or any other thing
+   		}
+	}
+
 }
 
 // @@ TODO: Update WC (world coordinates matrix) of a node and
@@ -347,8 +362,23 @@ void Node::updateBB () {
 //    See Recipe 1 in for knowing how to iterate through children.
 
 void Node::updateWC() {
-
-	//this.m_placementWC.clone(m_placement);
+	if (this->m_gObject == 0){	//si es padre
+		// Actualiza T global del nodo (siendo este un padre)
+		this->m_placementWC->clone(m_placement);
+		// Actualiza a todos sus hijos
+		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end();
+	       it != end; ++it) {
+	       Node *theChild = *it;
+	       theChild->updateWC();
+		}
+	}
+	else{
+		// Actualiza T global del nodo (siendo este una hoja)
+		// m_placementWC = m_parent->m_placementWC * (this->m_placement)
+		this->m_placementWC->clone(this->m_parent->m_placementWC);
+		this->m_placementWC->add(this->m_placement);
+	}
+	this->updateBB();
 }
 
 // @@ TODO:
@@ -359,7 +389,11 @@ void Node::updateWC() {
 // - Update WC transformation of sub-tree starting at node (updateWC)
 // - Propagate Bounding Box to root (propagateBBRoot), starting from the parent, if parent exists.
 
-void Node::updateGS() {
+void Node::updateGS(){
+	this->updateWC();
+	if (this->m_parent)
+		this->m_parent->propagateBBRoot();
+
 }
 
 // @@ TODO:
@@ -407,9 +441,9 @@ void Node::draw() {
 	// Crea hueco en pila modelview
 	// Añade transformación del nodo a la pila
 	rs->push(RenderState::modelview);
-	rs->addTrfm(RenderState::modelview, m_placement);
+	rs->addTrfm(RenderState::modelview, m_placementWC);
 
-	if (m_gObject){
+	if (m_gObject){	
 		m_gObject->draw();
 	}
 	else{
