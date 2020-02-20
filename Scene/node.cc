@@ -270,13 +270,13 @@ void Node::addChild(Node *theChild) {
 		// Tiene objeto geometrico, es nodo hoja, no se puede anadir hijo
 		// Anadir hijo a la lista de hijos del padre de this
 		// node has a gObject, so print warning
-		m_parent->addChild(theChild);
+		// m_parent->addChild(theChild);
 		printf("(W) Añadiendo nodo hoja.");
 	} else {
 		// node does not have gObject, so attach child
 		m_children.push_front(theChild);
 		theChild->m_parent = this;
-		updateGS();
+		theChild->updateGS();
 	}
 }
 
@@ -333,10 +333,12 @@ void Node::propagateBBRoot() {
 //    See Recipe 1 in for knowing how to iterate through children.
 
 void Node::updateBB () {
-	if (m_gObject != 0){	//si es objeto
-		this->m_containerWC->transform(m_placementWC);
+	if (m_gObject){	//si es objeto
+		this->m_containerWC->clone(m_gObject->getContainer());
+		this->m_containerWC->transform(this->m_placementWC);
 	}
 	else{	//si es padre
+		this->m_containerWC->init(); //pone como matriz idetidad
 		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end();
 		it != end; ++it) {
 			Node *theChild = *it;
@@ -362,21 +364,21 @@ void Node::updateBB () {
 //    See Recipe 1 in for knowing how to iterate through children.
 
 void Node::updateWC() {
-	if (this->m_gObject == 0){	//si es padre
-		// Actualiza T global del nodo (siendo este un padre)
-		this->m_placementWC->clone(m_placement);
-		// Actualiza a todos sus hijos
-		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end();
-	       it != end; ++it) {
-	       Node *theChild = *it;
-	       theChild->updateWC();
-		}
-	}
-	else{
+	if (this->m_parent){	//si es padre
 		// Actualiza T global del nodo (siendo este una hoja)
 		// m_placementWC = m_parent->m_placementWC * (this->m_placement)
 		this->m_placementWC->clone(this->m_parent->m_placementWC);
 		this->m_placementWC->add(this->m_placement);
+	}
+	else{
+		// Actualiza T global del nodo (siendo este un padre)
+		// Actualiza a todos sus hijos
+		this->m_placementWC->clone(m_placement);
+	}
+	for(list<Node *>::iterator it = m_children.begin(), end = m_children.end();
+		it != end; ++it) {
+		Node *theChild = *it;
+		theChild->updateWC();
 	}
 	this->updateBB();
 }
@@ -440,11 +442,12 @@ void Node::draw() {
 	
 	// Crea hueco en pila modelview
 	// Añade transformación del nodo a la pila
-	rs->push(RenderState::modelview);
-	rs->addTrfm(RenderState::modelview, m_placementWC);
 
 	if (m_gObject){	
+		rs->push(RenderState::modelview);
+		rs->addTrfm(RenderState::modelview, m_placementWC);
 		m_gObject->draw();
+		rs->pop(RenderState::modelview);
 	}
 	else{
 		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end(); it != end; ++it) {
@@ -452,7 +455,6 @@ void Node::draw() {
 			theChild->draw();
     	}
 	}
-	rs->pop(RenderState::modelview);
 	/* =================== END YOUR CODE HERE ====================== */
 
 	// Restore shaders
