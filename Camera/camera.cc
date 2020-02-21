@@ -128,8 +128,18 @@ void OrthographicCamera::updateProjection() {
 
 void PerspectiveCamera::updateProjection() {
 	/* =================== PUT YOUR CODE HERE ====================== */
-
+	// TRANSPARECIA PAGINA 12
+	// TRFM3D.setFrustum(...)
+	// m_projTrfm->setFrustum(...)
+	float t = m_near*tan(m_fovy/2);
+	float b = -t;
+	float r = m_aspectRatio*t;
+	float l = -r;
+	m_projTrfm->setFrustum(l,r,b,t,m_near,m_far);
 	/* =================== END YOUR CODE HERE ====================== */
+
+	// Una vez hecha la transormación se actualizán los planos de proyección 
+	// explicado en "Especifiación de los planos del frustrum" en "camara.pdf"
 	updateFrustumPlanes();
 }
 
@@ -150,6 +160,32 @@ void Camera::setViewTrfm() {
 
 void Camera::updateFrame () {
 	/* =================== PUT YOUR CODE HERE ====================== */
+	// Lo de hacer los vectores para el cambio de base a la camara
+	// rx, ry, rz
+	// recordar que estos vectores están normalizados
+	// Al hacer V.normalize(), normaliza el vector V y lo guarda ahí
+	// para normalizar pero devolver el vector, crear un vector auxiliar A
+	// v_aux <- clone(up)
+	// v_aux.normalize()
+	// v.cross(V1)			Producto vectorial, deja en v el producto vectorial
+	// v.crossVector(V1)	Producto vectorial, devuelve el productor vectorial (no machaca)
+	Vector3 F = Vector3(m_E.x()-m_At.x(),m_E.y()-m_At.y(),m_E.z()-m_At.z());
+	F.normalize();
+	Vector3 m_UpAux = Vector3(m_Up.x(),m_Up.y(),m_Up.z());
+	m_UpAux.normalize();
+	m_UpAux.cross(F);
+	m_R.x = m_UpAux.x();
+	m_R.y = m_UpAux.y();
+	m_R.z = m_UpAux.z();
+
+	m_U.x = F.x();
+	m_U.y = F.y();
+	m_U.z = F.z();
+	m_U.cross(m_R);
+
+	m_D.x = F.x();
+	m_D.y = F.y();
+	m_D.z = F.z();
 
 	/* =================== END YOUR CODE HERE ====================== */
 	setViewTrfm();

@@ -178,9 +178,9 @@ protected:
 	 - origin camera reference system : at m_E
 	*/
 
-	Vector3 m_E;  // View point (default 0, 0  0)
-	Vector3 m_At; // look At point (default 0, 0, -1)
-	Vector3 m_Up; // Up vector X (default 0, 1, 0)
+	Vector3 m_E;  // View point (default 0, 0  0)			PUNTO DE LA CAMARA
+	Vector3 m_At; // look At point (default 0, 0, -1)		PUNTO DE ATENCION
+	Vector3 m_Up; // Up vector X (default 0, 1, 0)			VECTOR DE VERTICALIDAD
 
 	// dependent values
 	Vector3 m_R; //!< right vector (in world coordinates)
