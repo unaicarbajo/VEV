@@ -131,11 +131,11 @@ void PerspectiveCamera::updateProjection() {
 	// TRANSPARECIA PAGINA 12
 	// TRFM3D.setFrustum(...)
 	// m_projTrfm->setFrustum(...)
-	float t = m_near*tan(m_fovy/2);
-	float b = -t;
-	float r = m_aspectRatio*t;
-	float l = -r;
-	m_projTrfm->setFrustum(l,r,b,t,m_near,m_far);
+	m_top = m_near*tan(m_fovy/2);
+	m_bottom = -m_top;
+	m_right = m_aspectRatio*m_top;
+	m_left = -m_right;
+	m_projTrfm->setFrustum(m_left,m_right,m_bottom,m_top,m_near,m_far);
 	/* =================== END YOUR CODE HERE ====================== */
 
 	// Una vez hecha la transormación se actualizán los planos de proyección 
@@ -161,31 +161,27 @@ void Camera::setViewTrfm() {
 void Camera::updateFrame () {
 	/* =================== PUT YOUR CODE HERE ====================== */
 	// Lo de hacer los vectores para el cambio de base a la camara
-	// rx, ry, rz
-	// recordar que estos vectores están normalizados
+	// rx, ry, rz = R, D, F
 	// Al hacer V.normalize(), normaliza el vector V y lo guarda ahí
 	// para normalizar pero devolver el vector, crear un vector auxiliar A
 	// v_aux <- clone(up)
 	// v_aux.normalize()
 	// v.cross(V1)			Producto vectorial, deja en v el producto vectorial
 	// v.crossVector(V1)	Producto vectorial, devuelve el productor vectorial (no machaca)
-	Vector3 F = Vector3(m_E.x()-m_At.x(),m_E.y()-m_At.y(),m_E.z()-m_At.z());
-	F.normalize();
-	Vector3 m_UpAux = Vector3(m_Up.x(),m_Up.y(),m_Up.z());
-	m_UpAux.normalize();
-	m_UpAux.cross(F);
-	m_R.x = m_UpAux.x();
-	m_R.y = m_UpAux.y();
-	m_R.z = m_UpAux.z();
 
-	m_U.x = F.x();
-	m_U.y = F.y();
-	m_U.z = F.z();
+	// Z de la cámara
+	m_D[0] = m_E[0]-m_At[0]; m_D[1] = m_E[1]-m_At[1]; m_D[2] = m_E[2]-m_At[2];
+	m_D.normalize();
+
+	// X de la cámara
+	m_R[0] = m_Up[0];m_R[1] = m_Up[1];m_R[2] = m_Up[2];
+	m_R.normalize();
+	m_R.cross(m_D);
+
+	// Y de la cámara
+	m_U[0] = m_D[0];m_U[1] = m_D[1];m_U[2] = m_D[2];
 	m_U.cross(m_R);
 
-	m_D.x = F.x();
-	m_D.y = F.y();
-	m_D.z = F.z();
 
 	/* =================== END YOUR CODE HERE ====================== */
 	setViewTrfm();

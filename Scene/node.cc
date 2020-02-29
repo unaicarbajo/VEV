@@ -493,8 +493,7 @@ void Node::frustumCull(Camera *cam) {
 
 const Node *Node::checkCollision(const BSphere *bsph) const {
 	if (!m_checkCollision) return 0;
-	/* =================== PUT YOUR CODE HERE ====================== */
-
-	return 0; /* No collision */
+	/* ================== PUT YOUR CODE HERE ====================== */
+	return BSphereBBoxIntersect(bsph,this->m_containerWC) == IREJECT? 0 : this;
 	/* =================== END YOUR CODE HERE ====================== */
 }

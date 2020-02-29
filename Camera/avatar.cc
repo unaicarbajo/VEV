@@ -29,11 +29,18 @@ bool Avatar::walkOrFly(bool walkOrFly) {
 bool Avatar::advance(float step) {
 
 	Node *rootNode = Scene::instance()->rootNode(); // root node of scene
+	Avatar *sig = new Avatar("clon",this->m_cam,this->m_bsph->m_radius);
+
 
 	if (m_walk)
-		m_cam->walk(step);
+		sig->m_cam->walk(step);
+		if (!rootNode->checkCollision(sig->m_bsph))
+			m_cam->walk(step);
 	else
-		m_cam->fly(step);
+		sig->m_cam->fly(step);
+		if (!rootNode->checkCollision(sig->m_bsph))
+			m_cam->fly(step);
+
 	return true;
 }
 
