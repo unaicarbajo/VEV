@@ -274,8 +274,8 @@ void Node::addChild(Node *theChild) {
 		printf("(W) Añadiendo nodo hoja.");
 	} else {
 		// node does not have gObject, so attach child
-		m_children.push_front(theChild);
 		theChild->m_parent = this;
+		m_children.push_front(theChild);
 		theChild->updateGS();
 	}
 }
@@ -494,6 +494,14 @@ void Node::frustumCull(Camera *cam) {
 const Node *Node::checkCollision(const BSphere *bsph) const {
 	if (!m_checkCollision) return 0;
 	/* ================== PUT YOUR CODE HERE ====================== */
-	return BSphereBBoxIntersect(bsph,this->m_containerWC) == IREJECT? 0 : this;
+	if (this->m_gObject != 0 && BSphereBBoxIntersect(bsph,this->m_containerWC) == 0)
+		return this;
+	for(list<Node *>::const_iterator it = m_children.begin(), end = m_children.end();
+        it != end; ++it) {
+        const Node *theChild = *it;
+		if (theChild->checkCollision(bsph) != 0)
+			return theChild;
+		}
+	return 0;
 	/* =================== END YOUR CODE HERE ====================== */
 }
