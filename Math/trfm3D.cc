@@ -197,9 +197,9 @@ void Trfm3D::clone( const Trfm3D *T ) {	clone(*T); }
 
 Vector3 Trfm3D::transformPoint(const Vector3 & P) const {
 	Vector3 res;
-	res[0] = P.dot(Vector3(m_c1[0],m_c2[0],m_c3[0]))+m_tr[0];
-	res[1] = P.dot(Vector3(m_c1[1],m_c2[1],m_c3[1]))+m_tr[1];
-	res[0] = P.dot(Vector3(m_c1[2],m_c2[2],m_c3[2]))+m_tr[2];
+	res[0] = (m_c1[0]*P[0] + m_c2[0]*P[1] +m_c3[0]*P[2])*m_scl +m_tr[0];
+	res[1] = (m_c1[1]*P[0] + m_c2[1]*P[1] +m_c3[1]*P[2])*m_scl +m_tr[1];
+	res[2] = (m_c1[2]*P[0] + m_c2[2]*P[1] +m_c3[2]*P[2])*m_scl +m_tr[2];
 	return res;
 }
 
@@ -211,9 +211,9 @@ Vector3 Trfm3D::transformPoint(const Vector3 & P) const {
 
 Vector3 Trfm3D::transformVector(const Vector3 & V) const {
 	Vector3 res;
-	res[0] = V.dot(Vector3(m_c1[0],m_c2[0],m_c3[0]));
-	res[1] = V.dot(Vector3(m_c1[1],m_c2[1],m_c3[1]));
-	res[0] = V.dot(Vector3(m_c1[2],m_c2[2],m_c3[2]));
+	res[0] = (m_c1[0]*V[0] + m_c2[0]*V[1] +m_c3[0]*V[2])*m_scl;
+	res[1] = (m_c1[1]*V[0] + m_c2[1]*V[1] +m_c3[1]*V[2])*m_scl;
+	res[2] = (m_c1[2]*V[0] + m_c2[2]*V[1] +m_c3[2]*V[2])*m_scl;
 	return res;
 }
 
@@ -406,7 +406,7 @@ void Trfm3D::setRotAxis(const Vector3 & V, const Vector3 & P, float angle ) {
 
 	setTrans(P);
 	addRotVec(V,angle);
-	addTrans((-1)*P);
+	addTrans((-1.0f)*P);
 }
 
 
