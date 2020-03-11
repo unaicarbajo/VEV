@@ -5,11 +5,11 @@
 // This module renders a triangleMesh using openGL as a backend.
 
 struct Vbo_vertex {
-	GLfloat v[3];
-	GLfloat n[3];
-	GLfloat t[2];
-	GLfloat tbn_t[3];
-	GLfloat tbn_b[3];
+	GLfloat v[3];		// vertice
+	GLfloat n[3];		// normal
+	GLfloat t[2];		// coordenadas de textura
+	GLfloat tbn_t[3];	// tangenete
+	GLfloat tbn_b[3];	// binormal
 };
 
 #define VBO_BUFFER_OFFSET(i) ((char *)NULL + (i))

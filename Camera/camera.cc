@@ -170,18 +170,18 @@ void Camera::updateFrame () {
 	// v.crossVector(V1)	Producto vectorial, devuelve el productor vectorial (no machaca)
 
 	// Z de la cámara
-	m_D[0] = m_E[0]-m_At[0]; m_D[1] = m_E[1]-m_At[1]; m_D[2] = m_E[2]-m_At[2];
+
+	m_D = (m_E-m_At);
 	m_D.normalize();
 
 	// X de la cámara
-	m_R[0] = m_Up[0];m_R[1] = m_Up[1];m_R[2] = m_Up[2];
+	m_R = m_Up;
 	m_R.normalize();
 	m_R.cross(m_D);
 
 	// Y de la cámara
-	m_U[0] = m_D[0];m_U[1] = m_D[1];m_U[2] = m_D[2];
+	m_U = m_D;
 	m_U.cross(m_R);
-
 
 	/* =================== END YOUR CODE HERE ====================== */
 	setViewTrfm();
@@ -337,10 +337,19 @@ void  Camera::arcLeftRight(float angle) {
 // @@ TODO: Check frustum (look at camera.h for parameter descriptions and return
 //          values)
 
-int Camera::checkFrustum(const BBox *theBBox,
-						 unsigned int *planesBitM) {
-
-	return -1; // BBox is fully inside the frustum
+int Camera::checkFrustum(const BBox *theBBox, unsigned int *planesBitM) {
+	bool inter;
+	for (int i = 0; i<6; i++){
+		// Se compruba si corta o no
+		// en caso de no cortar, se analiza el lado
+		// en el que se situa el BBOX
+		inter = BBoxPlaneIntersect(theBBox,m_fPlanes[i]);
+		if (inter == 0) 		// está cortando
+			return 0;
+		else if (inter == 1) 	// está fuera del plano
+			return 1;
+	}
+	return -1; 					// BBox is fully inside the frustum
 }
 
 /////////////////////////////////////////////////////////////////////////////////////

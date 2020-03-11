@@ -479,14 +479,15 @@ void Node::setCulled(bool culled) {
 //          update m_isCulled accordingly.
 
 void Node::frustumCull(Camera *cam) {
-	if (m_gObject != 0)
-		return ;
-// @@ TODO: Mirar hijos si están en el frustrum
-	for(list<Node *>::iterator it = m_children.begin(), end = m_children.end();
-        it != end; ++it) {
-        Node *theChild = *it;
-        theChild->// or any other thing
-    }
+	int fr = cam->checkFrustum(this->m_containerWC, 0);
+	m_isCulled = (fr == 0 || fr == -1)? 0: -1;
+	if (this->m_gObject == 0 && fr != 1){
+		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end();
+			it != end; ++it) {
+			Node *theChild = *it;
+			theChild->frustumCull(cam);
+		}
+	}
 }
 
 // @@ TODO: Check whether a BSphere (in world coordinates) intersects with a

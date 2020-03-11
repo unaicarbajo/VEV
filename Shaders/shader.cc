@@ -207,7 +207,8 @@ void ShaderProgram::beforeDraw() {
 	this->send_uniform("modelToClipMatrix", rs->top(RenderState::modelview_projection));
 
 	this->send_uniform("scene_ambient", rs->getSceneAmbient());
-
+	if( this->has_capability("sc"))
+		this->send_uniform("sc",rs->getSc());
 	int i = 0;
 	for(LightManager::iterator it = LightManager::instance()->begin(),
 			end = LightManager::instance()->end(); it != end; ++it) {
