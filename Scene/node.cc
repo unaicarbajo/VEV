@@ -480,8 +480,12 @@ void Node::setCulled(bool culled) {
 
 void Node::frustumCull(Camera *cam) {
 	int fr = cam->checkFrustum(this->m_containerWC, 0);
-	m_isCulled = (fr == 0 || fr == -1)? 0: -1;
-	if (this->m_gObject == 0 && fr != 1){
+	this->m_isCulled = (fr == 0 || fr == -1)? false: true;
+
+	// Solo mira hijos si es intersecta, si está dentro o fuera no es necesario.
+	// Ya que si está dentro todos los hijos están dentro, si está fuera todos los
+	// hijos están fuera
+	if (fr == 0){	
 		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end();
 			it != end; ++it) {
 			Node *theChild = *it;

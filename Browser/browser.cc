@@ -239,7 +239,7 @@ static void Display() {
 	theCamera = CameraManager::instance()->find("mainCamera");
 	if (!theCamera) return; // no main camera
 
-	//Scene::instance()->rootNode()->frustumCull(theCamera); // Frustum Culling
+	Scene::instance()->rootNode()->frustumCull(theCamera); // Frustum Culling
 
 	Render(theCamera);
 	glutSwapBuffers();

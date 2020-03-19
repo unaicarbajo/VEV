@@ -11,7 +11,7 @@ uniform float sc;
 void main() {
 
 	f_color = vec4(sc,1,1,1);
-	vec3 pos = v_position + sc;
+	vec3 pos = v_position + vec3(sc,sc,sc);
 	gl_Position = cameraToClipMatrix * modelToCameraMatrix * vec4(pos, 1);
 
 }
