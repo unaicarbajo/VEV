@@ -9,7 +9,7 @@ uniform int active_lights_n; // Number of active lights (< MG_MAX_LIGHT)
 uniform vec3 scene_ambient;  // rgb
 
 uniform struct light_t {
-	vec4 position;    // Camera space
+	vec4 position;    // Camera space en coordenadas homogéneas
 	vec3 diffuse;     // rgb
 	vec3 specular;    // rgb
 	vec3 attenuation; // (constant, lineal, quadratic)
@@ -32,7 +32,33 @@ attribute vec2 v_texCoord;
 varying vec4 f_color;
 varying vec2 f_texCoord;
 
-
+// Dado un vector de una luz y la normal obtener la aportación lambertiana
+// Recordar: el vector de la luz va del revés 
+float lambert_factor(vec3 n, vec3 l){
+	// El dot puede ser negativo
+	return max(0.0,dot(n,l));
+}
 void main() {
+	vec3 positionEye;
+	vec3 normalEye;
+	vec3 L;
+	vec3 color_difuso = vec3(0.0,0.0,0.0);
+	// Cambiar se distema de coordenadas del modelo a la de la camara
+	// Posición del vértice en coordenadas homogeneas en el SRC
+	positionEye = (modelToCameraMatrix * vec4(v_position,1)).xyz;
+	normalEye = normalize((modelToCameraMatrix * vec4(v_normal,1)).xyz);
+	for (int i = 0; i < active_lights_n; i++){
+		if (theLights[i].position[3] == 0){
+			// Está en S.C.C
+			L = (-1.0)*theLights[i].position.xyz;
+			// lambert_factor
+			lambert_factor(normalEye, L) * theLights[i].diffuse * theMaterial.diffuse;
+		}
+	}
+
+	f_color.rgb = scene_ambient + color_difuso;	
+	f_color.a = 1.0; 	// 1.0 = canal alpha (total transparencia)
+						// 0.0 = totalmente opaco
+	f_texCoord = v_texCoord;
 	gl_Position = modelToClipMatrix * vec4(v_position, 1);
 }

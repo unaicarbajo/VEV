@@ -89,7 +89,12 @@ void Light::placeScene() {
 	Trfm3D &modelView = rs->top(RenderState::modelview);
 
 	/* =================== PUT YOUR CODE HERE ====================== */
-
+	if (m_type == directional){
+		// Direccional
+		// La luz es un vector en coordenadas homogéneas
+		m_positionEye = modelView.transformVector(m_position); // Pasar a coodernadas de la cámara el vector
+		m_positionEye.normalize();
+	}
 	/* =================== END YOUR CODE HERE ====================== */
 }
 
