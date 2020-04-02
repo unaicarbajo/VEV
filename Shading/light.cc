@@ -95,6 +95,13 @@ void Light::placeScene() {
 		m_positionEye = modelView.transformVector(m_position); // Pasar a coodernadas de la cámara el vector
 		m_positionEye.normalize();
 	}
+	if (m_type == positional){
+		m_positionEye = modelView.transformPoint(m_position);
+		// ES UN PUNTO -> NO SE NORMALIZA
+	}
+	if (m_type == spotlight){
+		m_positionEye = modelView.transformPoint(m_position);
+	}
 	/* =================== END YOUR CODE HERE ====================== */
 }
 
