@@ -56,7 +56,7 @@ vec3 specular_vec(const in int i,const in vec3 lightDirection,
 	float RoV = dot(normalize(R),normalize(V));
 	// Se comprueba si el pow va a ser viable, equivalente al max
 	float powRovS;
-	if (RoV>0 && theMaterial.shininess>0){
+	if (RoV>0.0 && theMaterial.shininess>0.0){
 		powRovS = pow(RoV,theMaterial.shininess);
 	}
 	else{
@@ -66,9 +66,19 @@ vec3 specular_vec(const in int i,const in vec3 lightDirection,
 	return theLights[i].specular * specFactor;
 }
 float attenuation_factor(const in int i, const float distance){
-	vec3 attenuation_vec = normalize(theLights[i].attenuation);
-	return 1/(attenuation_vec.x+attenuation_vec.y*distance + attenuation_vec.z*pow(distance,2));
+	float att_inv = theLights[i].attenuation.x+theLights[i].attenuation.y*distance + theLights[i].attenuation.z*pow(distance,2);
+	if (att_inv != 0.0)
+		return 1/att_inv;
+	return 1.0;
 }
+
+float cspot_factor(const in float LoS, float sExp){
+	if (LoS>0.0 && sExp>0.0){
+		return  pow(LoS,sExp);
+	}
+	return 0.0;
+	}
+
 void main() {
 	vec3 positionEye;
 	vec3 normalEye;
@@ -102,10 +112,13 @@ void main() {
 		//////////// SPOTLIGHT /////////////
 		else{
 			vec3 L = normalize(theLights[i].position.xyz - positionEye);
-			float cosAlpha = max(0.0,dot(-L,normalize(theLights[i].spotDir)));
-			if (cosAlpha > theLights[i].cosCutOff){
-				diffuse_color += diffuse_vec(i,L,normalEye);
-				specular_color += specular_vec(i,L,normalEye,(-1.0)*positionEye);
+			vec3 spotDirEye = normalize(theLights[i].spotDir);
+			float cosAlpha = max(0.0,dot(-L,spotDirEye));
+			if (cosAlpha >= theLights[i].cosCutOff){
+				float attenuation = attenuation_factor(i,length(L));
+				float cspot = cspot_factor(dot(-L,spotDirEye),attenuation);
+				diffuse_color += diffuse_vec(i,L,normalEye) * cspot;
+				specular_color += specular_vec(i,L,normalEye,(-1.0)*positionEye) * cspot;
 			}
 		}
 	}

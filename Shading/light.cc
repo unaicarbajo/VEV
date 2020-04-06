@@ -101,6 +101,8 @@ void Light::placeScene() {
 	}
 	if (m_type == spotlight){
 		m_positionEye = modelView.transformPoint(m_position);
+		m_spotDirectionEye = modelView.transformVector(m_spotDirection);
+		m_spotDirectionEye.normalize();
 	}
 	/* =================== END YOUR CODE HERE ====================== */
 }

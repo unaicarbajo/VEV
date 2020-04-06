@@ -11,5 +11,10 @@ void main() {
 	// Color del final del pixel
 
 	// color (interpolado) * color_textura
-	gl_FragColor = f_color; // * texColor;
+	gl_FragColor = f_color * texColor;
+
+
+	//importante
+	// m_spotDirectionEye = MODELVIEW * m_spotDirection(trasformVector)
+	// ^^^^^^ normalizar este
 }
