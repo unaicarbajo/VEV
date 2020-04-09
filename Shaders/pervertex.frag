@@ -5,6 +5,8 @@ varying vec2 f_texCoord;
 
 uniform sampler2D texture0;
 
+
+
 void main() {
 	vec4 texColor;
 	texColor = texture2D(texture0, f_texCoord);
@@ -12,9 +14,4 @@ void main() {
 
 	// color (interpolado) * color_textura
 	gl_FragColor = f_color * texColor;
-
-
-	//importante
-	// m_spotDirectionEye = MODELVIEW * m_spotDirection(trasformVector)
-	// ^^^^^^ normalizar este
 }

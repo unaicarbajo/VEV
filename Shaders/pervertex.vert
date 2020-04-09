@@ -66,18 +66,49 @@ vec3 specular_vec(const in int i,const in vec3 lightDirection,
 	return theLights[i].specular * specFactor;
 }
 float attenuation_factor(const in int i, const float distance){
+	// Si se normalizara theLights[i].attenuation se le quitaría importancia a la distancia
 	float att_inv = theLights[i].attenuation.x+theLights[i].attenuation.y*distance + theLights[i].attenuation.z*pow(distance,2);
 	if (att_inv != 0.0)
 		return 1/att_inv;
 	return 1.0;
 }
 
-float cspot_factor(const in float LoS, float sExp){
+float cspot_factor(const in float LoS, int i){
+	float sExp = theLights[i].exponent;
 	if (LoS>0.0 && sExp>0.0){
 		return  pow(LoS,sExp);
 	}
 	return 0.0;
 	}
+void directional_light(inout vec3 diffuse_color, vec3 specular_color,const  in int i, vec3 normalEye, vec3 positionEye){
+	// El vector L será -posicion_luz, normalizado
+	diffuse_color += diffuse_vec(i,-normalize(vec3(theLights[i].position)),normalEye);
+	specular_color += specular_vec(i,-normalize(vec3(theLights[i].position)),normalEye,(-1.0)*positionEye);
+}
+
+void positional_light(inout vec3 diffuse_color, vec3 specular_color,const  in int i, vec3 normalEye, vec3 positionEye){
+	// El vetor L será el vector que une los puntos
+	// positionEye y position(luz), normalizado
+	vec3 L = theLights[i].position.xyz - positionEye;
+	float distanceL = length(L);
+	if (distanceL > 0.0){
+		vec3 L_normal = L/distanceL;
+		float attenuation = attenuation_factor(i,distanceL);
+		diffuse_color += diffuse_vec(i,L_normal,normalEye) * attenuation;
+		specular_color += specular_vec(i,L_normal,normalEye,(-1.0)*positionEye) * attenuation;
+	}
+}
+
+void spotlight(inout vec3 diffuse_color, vec3 specular_color,const in int i, vec3 normalEye, vec3 positionEye){
+	vec3 L = normalize(theLights[i].position.xyz - positionEye);
+	vec3 spotDirEye = normalize(theLights[i].spotDir);
+	float cosAlpha = max(0.0,dot(-L,spotDirEye));
+	if (cosAlpha >= theLights[i].cosCutOff){
+		float cspot = cspot_factor(dot(-L,spotDirEye),i);
+		diffuse_color += diffuse_vec(i,L,normalEye) * cspot;
+		specular_color += specular_vec(i,L,normalEye,(-1.0)*positionEye) * cspot;
+	}
+}
 
 void main() {
 	vec3 positionEye;
@@ -91,35 +122,16 @@ void main() {
 	for (int i = 0; i < active_lights_n; i++){
 		//////////// DIRECCIONAL /////////////
 		if (theLights[i].position[3] == 0){
-			// Está en S.C.C
-			// El vector L será -posicion_luz, normalizado
-			diffuse_color += diffuse_vec(i,-normalize(vec3(theLights[i].position)),normalEye);
-			specular_color += specular_vec(i,-normalize(vec3(theLights[i].position)),normalEye,(-1.0)*positionEye);
+			directional_light(diffuse_color, specular_color, i, normalEye, positionEye);
 		}
 		//////////// POSICIONAL /////////////
 		// el ángulo (cutoff) es 90
 		else if (theLights[i].position[3] == 1 && theLights[i].cosCutOff == 0.0){
-			// El vetor L será el vector que une los puntos
-			// positionEye y position(luz), normalizado
-			vec3 L = theLights[i].position.xyz - positionEye;
-			float distanceL = length(L);
-			if (distanceL > 0.0){
-				float attenuation = attenuation_factor(i,distanceL);
-				diffuse_color += diffuse_vec(i,L/distanceL,normalEye) * attenuation;
-				specular_color += specular_vec(i,L/distanceL,normalEye,(-1.0)*positionEye) * attenuation;
-			}
+			positional_light(diffuse_color, specular_color, i, normalEye, positionEye);
 		}
 		//////////// SPOTLIGHT /////////////
 		else{
-			vec3 L = normalize(theLights[i].position.xyz - positionEye);
-			vec3 spotDirEye = normalize(theLights[i].spotDir);
-			float cosAlpha = max(0.0,dot(-L,spotDirEye));
-			if (cosAlpha >= theLights[i].cosCutOff){
-				float attenuation = attenuation_factor(i,length(L));
-				float cspot = cspot_factor(dot(-L,spotDirEye),attenuation);
-				diffuse_color += diffuse_vec(i,L,normalEye) * cspot;
-				specular_color += specular_vec(i,L,normalEye,(-1.0)*positionEye) * cspot;
-			}
+			spotlight(diffuse_color, specular_color, i, normalEye, positionEye);
 		}
 	}
 
