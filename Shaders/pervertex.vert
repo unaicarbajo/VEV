@@ -73,37 +73,39 @@ vec3 specular_vec(const in int i,const in vec3 lightDirection,
 					const in vec3 normal, const in vec3 V){
 
 	float specFactor;
-	vec3 R = 2*dot(normal,lightDirection)*normal - lightDirection;
+	vec3 R = 2.0*dot(normal,lightDirection)*normal - lightDirection;
 	float RoV = dot(normalize(R),normalize(V));
 	// Se comprueba si el pow va a ser viable, equivalente al max
 	float powRovS;
-	if (RoV>0.0 && theMaterial.shininess>0.0){
+	if (RoV>0.0){ // && theMaterial.shininess>0.0
 		powRovS = pow(RoV,theMaterial.shininess);
 	}
 	else{
 		powRovS = 0.0;
 	}
-	specFactor = dot(normal,lightDirection)*powRovS;
+	
+	specFactor = max(0.0,dot(normal,lightDirection))*powRovS;
+	
 	return theLights[i].specular * specFactor;
 }
 
 // Cálculo de vector referente a la luz direccional (vector)
 // haciendo los aportes pertinentes a la aportación
 // de la reflexión difusa y especular
-void directional_light(inout vec3 diffuse_color, vec3 specular_color,const  in int i, vec3 normalEye, vec3 positionEye){
+void directional_light(inout vec3 diffuse_color,inout vec3 specular_color,const  in int i, vec3 normalEye, vec3 positionEye){
 	// El vector L será -posicion_luz, normalizado
-
+	vec3 L = -normalize(vec3(theLights[i].position));
 	// diffuse_vec = (n * l)difFactor x i_diff
-	diffuse_color += diffuse_vec(i,-normalize(vec3(theLights[i].position)),normalEye);
+	diffuse_color += diffuse_vec(i,L,normalEye);
 	// specular_vec = (n * l)max(0,(r*v)^m)specFactor x i_spec
 	// i_spec, m_spec son constantes
-	specular_color += specular_vec(i,-normalize(vec3(theLights[i].position)),normalEye,(-1.0)*positionEye);
+	specular_color += specular_vec(i,L,normalEye,(-1.0)*positionEye);
 }
 
 // Cálculo de vector referente a la luz posicional (vector)
 // haciendo los aportes pertinentes a la aportación
 // de la reflexión difusa y especular
-void positional_light(inout vec3 diffuse_color, vec3 specular_color,const  in int i, vec3 normalEye, vec3 positionEye){
+void positional_light(inout vec3 diffuse_color,inout vec3 specular_color,const  in int i, vec3 normalEye, vec3 positionEye){
 	// El vetor L será el vector que une los puntos
 	// positionEye y position(luz), normalizado
 	vec3 L = theLights[i].position.xyz - positionEye;
@@ -116,7 +118,7 @@ void positional_light(inout vec3 diffuse_color, vec3 specular_color,const  in in
 	}
 }
 
-void spotlight(inout vec3 diffuse_color, vec3 specular_color,const in int i, vec3 normalEye, vec3 positionEye){
+void spotlight(inout vec3 diffuse_color,inout vec3 specular_color,const in int i, vec3 normalEye, vec3 positionEye){
 	vec3 L = normalize(theLights[i].position.xyz - positionEye);
 	vec3 spotDirEye = normalize(theLights[i].spotDir);
 	float cosAlpha = max(0.0,dot(-L,spotDirEye));
@@ -158,7 +160,6 @@ void main() {
 			spotlight(diffuse_color, specular_color, i, normalEye, positionEye);
 		}
 	}
-
 
 	f_color.rgb = scene_ambient + diffuse_color * theMaterial.diffuse + specular_color * theMaterial.specular;
 	f_color.a = theMaterial.alpha; 	// 1.0 = canal alpha (total transparencia)
