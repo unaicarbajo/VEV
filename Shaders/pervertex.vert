@@ -152,11 +152,11 @@ void main() {
 		}
 		//////////// POSICIONAL /////////////
 		// el ángulo (cutoff) es 90
-		else if (theLights[i].position[3] == 1 && theLights[i].cosCutOff == 0.0){
+		else if (theLights[i].cosCutOff == 0.0){
 			positional_light(diffuse_color, specular_color, i, normalEye, positionEye);
 		}
 		//////////// SPOTLIGHT /////////////
-		else{
+		else if (theLights[i].cosCutOff > 0){
 			spotlight(diffuse_color, specular_color, i, normalEye, positionEye);
 		}
 	}
