@@ -480,18 +480,23 @@ void Node::setCulled(bool culled) {
 
 void Node::frustumCull(Camera *cam) {
 	int fr = cam->checkFrustum(this->m_containerWC, 0);
-	this->m_isCulled = (fr == 0 || fr == -1)? false: true;
+	//this->m_isCulled = (fr == 0 || fr == -1)? false: true;
 
 	// Solo mira hijos si es intersecta, si está dentro o fuera no es necesario.
 	// Ya que si está dentro todos los hijos están dentro, si está fuera todos los
 	// hijos están fuera
-	if (fr == 0){	
+	if (fr == 0){
+		this->m_isCulled = false;
 		for(list<Node *>::iterator it = m_children.begin(), end = m_children.end();
 			it != end; ++it) {
 			Node *theChild = *it;
 			theChild->frustumCull(cam);
 		}
 	}
+	else if(fr == -1)
+		this->setCulled(false);
+	else
+		this->m_isCulled = true;
 }
 
 // @@ TODO: Check whether a BSphere (in world coordinates) intersects with a
@@ -507,14 +512,16 @@ void Node::frustumCull(Camera *cam) {
 const Node *Node::checkCollision(const BSphere *bsph) const {
 	if (!m_checkCollision) return 0;
 	/* ================== PUT YOUR CODE HERE ====================== */
-	if (this->m_gObject != 0 && BSphereBBoxIntersect(bsph,this->m_containerWC) == 0)
-		return this;
-	for(list<Node *>::const_iterator it = m_children.begin(), end = m_children.end();
-        it != end; ++it) {
-        const Node *theChild = *it;
-		if (theChild->checkCollision(bsph) != 0)
-			return theChild;
+	if (BSphereBBoxIntersect(bsph,this->m_containerWC) == 0)	// Si intersecta el nodo (hijo o padre)
+		if (this->m_gObject == 0){								// En caso de ser padre mirar los hijos
+			for(list<Node *>::const_iterator it = m_children.begin(), end = m_children.end(); it != end; ++it) {
+       			 const Node *theChild = *it;
+				if (theChild->checkCollision(bsph) != 0)		// Si colisiona el hijo devolverlo
+					return theChild;
+			}
 		}
+		else													// En caso de que el nodo sea hijo directamente
+			return this;
 	return 0;
 	/* =================== END YOUR CODE HERE ====================== */
 }

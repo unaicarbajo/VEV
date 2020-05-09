@@ -23,7 +23,7 @@ varying vec2 f_texCoord;
 void main() {	
 	// Hago cambio al sistema de referencia de la cámara los siguientes 3 vectores
 	f_position =  (modelToCameraMatrix * vec4(v_position,1.0)).xyz;
-	f_viewDirection = (modelToCameraMatrix * vec4((-1.0)*f_position,1)).xyz;
+	f_viewDirection = (-1.0)*f_position;
 	f_normal = (modelToCameraMatrix * vec4(v_normal,0.0)).xyz;
 	
 	gl_Position = modelToClipMatrix * vec4(v_position, 1.0);
