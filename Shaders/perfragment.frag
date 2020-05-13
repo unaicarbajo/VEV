@@ -105,7 +105,7 @@ void directional_light(inout vec3 diffuse_color,inout vec3 specular_color,const 
 void positional_light(inout vec3 diffuse_color,inout vec3 specular_color,const  in int i, vec3 normalEye, vec3 positionEye){
 	// El vetor L será el vector que une los puntos
 	// positionEye y position(luz), normalizado
-	vec3 L = theLights[i].position.xyz - positionEye;
+	vec3 L = normalize(theLights[i].position.xyz - positionEye);
 	float distanceL = length(L);
 	if (distanceL != 0.0){
 		vec3 L_normal = L/distanceL;

@@ -66,16 +66,15 @@ void main() {
 	// matriz para pasar a espacio tangente
 	mat3 TBN = transpose(mat3(T,B,N));	// mat3(columna0,columna1,columna2)
 
-	f_viewDirection	= normalize(TBN * ((-1.0)*v_position));
+	f_viewDirection	= TBN * ((-1.0)*v_position);
 
 	f_texCoord = v_texCoord;
 
-
 	for (int i=0; i < active_lights_n; i++){
-		//if (theLights[i].position[3] == 0)
-			f_lightDirection[i] = normalize(TBN * vec4(theLights[i].position.xyz-v_position,0).xyz) ;
-		//else
-		//	f_lightDirection[i] = normalize(TBN * (modelToCameraMatrix * (-1.0)*theLights[i].position).xyz) ;
-		f_spotDirection[i]  = normalize(TBN * (modelToCameraMatrix * vec4(theLights[i].spotDir,0)).xyz);
+		if (theLights[i].position[3] == 0)
+			f_lightDirection[i] = TBN * (modelToCameraMatrix * (-1.0)*theLights[i].position).xyz ;
+		else
+			f_lightDirection[i] = TBN * (modelToCameraMatrix * vec4(theLights[i].position.xyz-v_position,0)).xyz ;
+		f_spotDirection[i]  = TBN * (modelToCameraMatrix * vec4(theLights[i].spotDir,0)).xyz;
 	}
 }

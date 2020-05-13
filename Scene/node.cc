@@ -495,6 +495,14 @@ void Node::frustumCull(Camera *cam) {
 	}
 	else if(fr == -1)
 		this->setCulled(false);
+	/*
+	Debido al funcionamiento del dibujo de los nodos, si un nodo padre está culled, no se comprueba
+	los hijos que suceden a dicho nodo, de manera que en este caso, para ahorrar recursos de cómputo,
+	simplemente se marca como culled el padre, sin necesidad de marcar como culled los hijos.
+
+	Así cuando se vaya a dibujar un nodo, en caso de que esté totalmente fuera, dicho nodo se marcará como
+	culled, sin importar el estado de sus hijos, ya que no se van a comprobar.
+	*/
 	else
 		this->m_isCulled = true;
 }

@@ -93,11 +93,11 @@ float specular_factor(const in vec3 lightDirection,
 // de la reflexión difusa y especular
 void directional_light(inout vec3 diffuse_color,inout vec3 specular_color,const  in int i, vec3 normalEye){
 
-	vec3 L = f_lightDirection[i];
+	vec3 L = normalize(f_lightDirection[i]);
 	diffuse_color += theLights[i].diffuse * diffuse_factor(L,normalEye);
 	// specular_factor = (n * l)max(0,(r*v)^m)
 	// i_spec, m_spec son constantes
-	specular_color += theLights[i].specular * specular_factor(L,normalEye,f_viewDirection);
+	specular_color += theLights[i].specular * specular_factor(L,normalEye,normalize(f_viewDirection));
 }
 
 // Cálculo de vector referente a la luz posicional (vector)
@@ -106,7 +106,7 @@ void directional_light(inout vec3 diffuse_color,inout vec3 specular_color,const 
 void positional_light(inout vec3 diffuse_color,inout vec3 specular_color,const  in int i, vec3 normalEye){
 	// El vetor L será el vector que une los puntos
 	// positionEye y position(luz), normalizado
-	vec3 L = f_lightDirection[i];
+	vec3 L = normalize(f_lightDirection[i]);
 	float distanceL = length(L);
 	if (distanceL != 0.0){
 		
@@ -118,7 +118,7 @@ void positional_light(inout vec3 diffuse_color,inout vec3 specular_color,const  
 		// specular_factor = (n * l)max(0,(r*v)^m)
 		// i_spec, m_spec son constantes
 		// en caso de posicional: specular_vec * attenuation
-		specular_color += theLights[i].specular * specular_factor(L,normalEye,f_viewDirection) * attenuation;
+		specular_color += theLights[i].specular * specular_factor(L,normalEye,normalize(f_viewDirection)) * attenuation;
 	}
 }
 
@@ -126,8 +126,8 @@ void positional_light(inout vec3 diffuse_color,inout vec3 specular_color,const  
 // haciendo los aportes pertinentes a la aportación
 // de la reflexión difusa y especular
 void spotlight(inout vec3 diffuse_color,inout vec3 specular_color,const in int i, vec3 normalEye){
-	vec3 L = f_lightDirection[i];
-	vec3 spotDirEye = f_spotDirection[i];
+	vec3 L = normalize(f_lightDirection[i]);
+	vec3 spotDirEye = normalize(f_spotDirection[i]);
 	float cosAlpha = max(0.0,dot(-L,spotDirEye));
 
 	if (cosAlpha > theLights[i].cosCutOff){
@@ -139,40 +139,39 @@ void spotlight(inout vec3 diffuse_color,inout vec3 specular_color,const in int i
 		// specular_factor= (n * l)max(0,(r*v)^m)
 		// i_spec, m_spec son constantes
 		// en caso de posicional: specular_vec * cspot
-		specular_color += theLights[i].specular  * specular_factor(L,normalEye,f_viewDirection) * cspot;
+		specular_color += theLights[i].specular  * specular_factor(L,normalEye,normalize(f_viewDirection)) * cspot;
 	}
 }
 
 void main() {
 	gl_FragColor = vec4(1.0);
 
-	vec3 normal, normalTS, diffuse_color, specular_color;
+	vec3 normal, diffuse_color, specular_color;
 	// se consigue la normal del bump map de rango [0,1]
-	normal = texture2D(bumpmap, f_texCoord).rgb;
+	vec4 rgbaBump = texture2D(bumpmap, f_texCoord);
 
 	// se transforma a rango [-1,1]
-	normalTS = normalize(normal * 2.0 -1.0);
+	normal = normalize(rgbaBump * 2.0 -1.0).xyz;
 
 	diffuse_color = vec3(0.0,0.0,0.0);
 	specular_color = vec3(0.0,0.0,0.0);
 	for (int i = 0; i < active_lights_n; i++){
 		//////////// DIRECCIONAL /////////////
 		if (theLights[i].position[3] == 0){
-			directional_light(diffuse_color, specular_color, i, normalTS);
+			directional_light(diffuse_color, specular_color, i, normal);
 		}
 		//////////// POSICIONAL /////////////
 		// el ángulo (cutoff) es 90
 		else if (theLights[i].cosCutOff == 0.0){
-			positional_light(diffuse_color, specular_color, i, normalTS);
+			positional_light(diffuse_color, specular_color, i, normal);
 		}
 		//////////// SPOTLIGHT /////////////
 		else {
-			spotlight(diffuse_color, specular_color, i, normalTS);
+			spotlight(diffuse_color, specular_color, i, normal);
 		}
 	}
-	vec3 diffuseMaterial = texture2D(bumpmap, f_texCoord).xyz;
-	
-	f_color.rgb = scene_ambient + diffuse_color * diffuseMaterial * theMaterial.diffuse + specular_color * theMaterial.specular;
+
+	f_color.rgb = scene_ambient + diffuse_color * theMaterial.diffuse + specular_color * theMaterial.specular;
 	f_color.a = theMaterial.alpha; 	// 1.0 = canal alpha (total transparencia)
 									// 0.0 = totalmente opaco
 

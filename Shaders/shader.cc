@@ -253,6 +253,8 @@ void ShaderProgram::beforeDraw() {
 			tex->bindGLUnit(Constants::gl_texunits::texture);
 			this->send_uniform("texture0", Constants::gl_texunits::texture); // Texture unit 0
 		}
+		if (this->has_capability("bump"))
+			this->send_uniform("bumpmap", Constants::gl_texunits::bump); // Texture unit 1
 	}
 }
 
