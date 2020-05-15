@@ -43,7 +43,9 @@ float lambert_factor(vec3 n, vec3 l){
 // Cálculo del factor de atenuacion
 float attenuation_factor(const in int i, const float distance){
 	// Si se normalizara theLights[i].attenuation se le quitaría importancia a la distancia
-	float att_inv = theLights[i].attenuation.x+theLights[i].attenuation.y*distance + theLights[i].attenuation.z*pow(distance,2);
+	vec3 attVec = normalize(theLights[i].attenuation);
+	float att_inv = attVec.x+attVec.y*distance + attVec.z*pow(distance,2);
+	//float att_inv = theLights[i].attenuation.x+theLights[i].attenuation.y*distance + theLights[i].attenuation.z*pow(distance,2);
 	if (att_inv != 0.0)
 		return 1/att_inv;
 	return 1.0;
@@ -151,7 +153,7 @@ void main() {
 	vec4 rgbaBump = texture2D(bumpmap, f_texCoord);
 
 	// se transforma a rango [-1,1]
-	normal = normalize(rgbaBump * 2.0 -1.0).xyz;
+	normal = normalize((rgbaBump * 2.0 -1.0).xyz);
 
 	diffuse_color = vec3(0.0,0.0,0.0);
 	specular_color = vec3(0.0,0.0,0.0);

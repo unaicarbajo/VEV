@@ -65,7 +65,7 @@ void main() {
 
 	vec4 v_positionSRC = modelToCameraMatrix * vec4(v_position,1);
 
-	f_viewDirection	= TBN * v_positionSRC.xyz;
+	f_viewDirection	= TBN * (-1.0) * v_positionSRC.xyz;
 
 	f_texCoord = v_texCoord;
 

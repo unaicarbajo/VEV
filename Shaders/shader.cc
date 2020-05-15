@@ -198,6 +198,7 @@ void ShaderProgram::beforeDraw() {
 
 	Material *mat;
 	Texture *tex;
+	Texture *bMapTex;
 	RenderState *rs = RenderState::instance();
 	static char buffer[1024];
 
@@ -253,8 +254,12 @@ void ShaderProgram::beforeDraw() {
 			tex->bindGLUnit(Constants::gl_texunits::texture);
 			this->send_uniform("texture0", Constants::gl_texunits::texture); // Texture unit 0
 		}
-		if (this->has_capability("bump"))
+		//if (this->has_capability("bump"))
+		bMapTex = mat->getBumpMap();
+		if (bMapTex != 0) {
+			bMapTex->bindGLUnit(Constants::gl_texunits::bump);
 			this->send_uniform("bumpmap", Constants::gl_texunits::bump); // Texture unit 1
+		}
 	}
 }
 
