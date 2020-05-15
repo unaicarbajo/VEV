@@ -97,7 +97,7 @@ void directional_light(inout vec3 diffuse_color,inout vec3 specular_color,const 
 	diffuse_color += theLights[i].diffuse * diffuse_factor(L,normalEye);
 	// specular_factor = (n * l)max(0,(r*v)^m)
 	// i_spec, m_spec son constantes
-	specular_color += theLights[i].specular * specular_factor(L,normalEye,normalize(f_viewDirection));
+	specular_color += theLights[i].specular * specular_factor(L,normalEye,f_viewDirection);
 }
 
 // Cálculo de vector referente a la luz posicional (vector)
@@ -118,7 +118,7 @@ void positional_light(inout vec3 diffuse_color,inout vec3 specular_color,const  
 		// specular_factor = (n * l)max(0,(r*v)^m)
 		// i_spec, m_spec son constantes
 		// en caso de posicional: specular_vec * attenuation
-		specular_color += theLights[i].specular * specular_factor(L,normalEye,normalize(f_viewDirection)) * attenuation;
+		specular_color += theLights[i].specular * specular_factor(L,normalEye,f_viewDirection) * attenuation;
 	}
 }
 
@@ -139,7 +139,7 @@ void spotlight(inout vec3 diffuse_color,inout vec3 specular_color,const in int i
 		// specular_factor= (n * l)max(0,(r*v)^m)
 		// i_spec, m_spec son constantes
 		// en caso de posicional: specular_vec * cspot
-		specular_color += theLights[i].specular  * specular_factor(L,normalEye,normalize(f_viewDirection)) * cspot;
+		specular_color += theLights[i].specular  * specular_factor(L,normalEye,f_viewDirection) * cspot;
 	}
 }
 

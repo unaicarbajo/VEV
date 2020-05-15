@@ -58,23 +58,23 @@ void main() {
 
 	N = normalize((modelToCameraMatrix * vec4(v_normal,0.0)).xyz);
 	T = normalize((modelToCameraMatrix * vec4(v_TBN_t,0.0)).xyz);
-	// Se reortogonaliza
-	T = normalize(T - dot(T,N) * N);
-	B = cross(N,T);
-	// o B = normalize((modelToCameraMatrix * vec4(v_TBN_b,0.0)).xyz);
+	B = normalize((modelToCameraMatrix * vec4(v_TBN_b,0.0)).xyz);
 
 	// matriz para pasar a espacio tangente
 	mat3 TBN = transpose(mat3(T,B,N));	// mat3(columna0,columna1,columna2)
 
-	f_viewDirection	= TBN * ((-1.0)*v_position);
+	vec4 v_positionSRC = modelToCameraMatrix * vec4(v_position,1);
+
+	f_viewDirection	= TBN * v_positionSRC.xyz;
 
 	f_texCoord = v_texCoord;
 
+	// Luces en el sistema de coordenadas de la cámara
 	for (int i=0; i < active_lights_n; i++){
 		if (theLights[i].position[3] == 0)
-			f_lightDirection[i] = TBN * (modelToCameraMatrix * (-1.0)*theLights[i].position).xyz ;
+			f_lightDirection[i] = TBN * (-1.0)*theLights[i].position.xyz ;
 		else
-			f_lightDirection[i] = TBN * (modelToCameraMatrix * vec4(theLights[i].position.xyz-v_position,0)).xyz ;
-		f_spotDirection[i]  = TBN * (modelToCameraMatrix * vec4(theLights[i].spotDir,0)).xyz;
+			f_lightDirection[i] = TBN * (theLights[i].position.xyz-v_positionSRC.xyz);
+		f_spotDirection[i]  = TBN * theLights[i].spotDir;
 	}
 }
