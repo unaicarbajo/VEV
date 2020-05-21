@@ -197,8 +197,7 @@ template<class V> void ShaderProgram::send_uniform(const std::string uname, cons
 void ShaderProgram::beforeDraw() {
 
 	Material *mat;
-	Texture *tex;
-	Texture *bMapTex;
+	Texture *tex, *bMapTex, *specMapTex;
 	RenderState *rs = RenderState::instance();
 	static char buffer[1024];
 
@@ -208,8 +207,9 @@ void ShaderProgram::beforeDraw() {
 	this->send_uniform("modelToClipMatrix", rs->top(RenderState::modelview_projection));
 
 	this->send_uniform("scene_ambient", rs->getSceneAmbient());
-	if( this->has_capability("sc"))
-		this->send_uniform("sc",rs->getSc());
+	// PC
+	//if( this->has_capability("sc"))
+	//	this->send_uniform("sc",rs->getSc());
 	int i = 0;
 	for(LightManager::iterator it = LightManager::instance()->begin(),
 			end = LightManager::instance()->end(); it != end; ++it) {
@@ -254,11 +254,20 @@ void ShaderProgram::beforeDraw() {
 			tex->bindGLUnit(Constants::gl_texunits::texture);
 			this->send_uniform("texture0", Constants::gl_texunits::texture); // Texture unit 0
 		}
-		//if (this->has_capability("bump"))
-		bMapTex = mat->getBumpMap();
-		if (bMapTex != 0) {
-			bMapTex->bindGLUnit(Constants::gl_texunits::bump);
-			this->send_uniform("bumpmap", Constants::gl_texunits::bump); // Texture unit 1
+		if (this->has_capability("bump")){
+			bMapTex = mat->getBumpMap();
+			if (bMapTex != 0) {
+				bMapTex->bindGLUnit(Constants::gl_texunits::bump);
+				this->send_uniform("bumpmap", Constants::gl_texunits::bump); // Texture unit 1
+			}
+		}
+
+		if (this->has_capability("specular")){
+			specMapTex = mat->getSpecularMap();
+			if (specMapTex != 0) {
+				specMapTex->bindGLUnit(Constants::gl_texunits::specular);
+				this->send_uniform("specmap", Constants::gl_texunits::specular); // Texture unit 2
+			}
 		}
 	}
 }

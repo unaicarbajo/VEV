@@ -11,17 +11,14 @@ uniform mat4 cameraToClipMatrix;
 uniform mat4 modelToWorldMatrix;
 uniform mat4 modelToClipMatrix;
 
-varying vec3 f_position;
-varying vec3 f_viewDirection;
-varying vec3 f_normal;
-varying vec2 f_texCoord;
+varying vec3 f_position;       // camera space
+varying vec3 f_viewDirection;  // camera space
+varying vec3 f_normal;         // camera space
+varying vec2 f_texCoord;       // camera space
+
+varying vec3 f_positionw; // world space
+varying vec3 f_normalw;   // world space
 
 void main() {
 	gl_Position = modelToClipMatrix * vec4(v_position, 1.0);
-
-	f_position =  (modelToCameraMatrix * vec4(v_position,1.0)).xyz;
-	f_viewDirection = (-1.0)*f_position;
-	f_normal = (modelToCameraMatrix * vec4(v_normal,0.0)).xyz;
-	f_texCoord = v_texCoord;
-
 }

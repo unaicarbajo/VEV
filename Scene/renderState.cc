@@ -11,10 +11,10 @@ RenderState *RenderState::instance() {
 RenderState::RenderState() :
 	m_frontMaterial(0),
 	m_backMaterial(0),
+	m_camera(0),
 	m_ambient(Vector3(0.05f, 0.05f, 0.05)),
 	m_activeShader(0),
-	m_drawBBox(false),
-	m_sc(1.0f) {}
+	m_drawBBox(false) {}
 
 RenderState::~RenderState() {}
 
@@ -117,6 +117,12 @@ ShaderProgram *RenderState::getShader() {
 }
 
 ///////////////////////////////////////////
+// Camera
+
+void RenderState::setCamera(Camera *cam) { m_camera = cam; }
+Camera *RenderState::getCamera() const { return m_camera; }
+
+///////////////////////////////////////////
 // Lights
 
 void RenderState::addLight(Light *l) {
@@ -193,6 +199,3 @@ void RenderState::print() const {
 	printf("Shader: %s\n", m_activeShader ? m_activeShader->getName() : "NULL");
 	bool m_drawBBox;
 }
-float RenderState::getSc() const { return m_sc ; }
-void RenderState::setSc(float v) { m_sc = v ; }
-

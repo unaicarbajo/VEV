@@ -23,8 +23,6 @@ static int prevTime;
 static int mouse_pre_x = -1;
 static int mouse_pre_y = -1;
 
-static float t = 0.0f;
-
 static void switchAllLights(bool onOff) {
 	for(LightManager::iterator it = LightManager::instance()->begin(), end = LightManager::instance()->end();
 		it != end; ++it) it->switchLight(onOff);
@@ -163,8 +161,6 @@ static void InitAvatar() {
 
 static void InitShaders() {
 	ShaderManager *mgr = ShaderManager::instance();
-	// create(nombre,path vert, path shaders)
-	// en vez de usar estas funciones create, se va a realizar mediante JSON
 	mgr->create("dummy", "Shaders/dummy.vert", "Shaders/dummy.frag");
 	mgr->create("pervertex", "Shaders/pervertex.vert", "Shaders/pervertex.frag");
 	mgr->create("sky", "Shaders/sky.vert", "Shaders/sky.frag");
@@ -216,6 +212,7 @@ static void Render(Camera *theCamera) {
 	RenderState *rs = RenderState::instance();
 	LightManager *lmgr = LightManager::instance();
 
+	rs->setCamera(theCamera);
 	// draw the background color
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	rs->loadTrfm(RenderState::projection, theCamera->projectionTrfm());
@@ -543,12 +540,8 @@ void animate(int value) {
 	// ##### REPLACE WITH YOUR OWN GAME/APP MAIN CODE HERE #####
 	if (runAnimation) {
 		// Force a redisplay to render the new image
-		t += 0.1;
-		if (t > 5.0)
-			t = 0.0;
-		RenderState::instance()->setSc (t) ;
-		glutPostRedisplay();
 
+		glutPostRedisplay();
 	}
 	// ##### END OF GAME/APP MAIN CODE #####
 	prevTime = currTime;
@@ -578,10 +571,10 @@ int main(int argc, char** argv) {
 		InitLight();
 		InitShaders();
 		// Change the line below for different scenes
-		// displayNode = create_scene();
+		displayNode = create_scene();
 		// Other possible scenes:
 		//
-		 displayNode = create_scene_city();
+		// displayNode = create_scene_city();
 	}
 
 	Scene::instance()->attach(displayNode);
