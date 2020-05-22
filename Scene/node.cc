@@ -446,6 +446,10 @@ void Node::draw() {
 	if (m_gObject){	
 		rs->push(RenderState::modelview);
 		rs->addTrfm(RenderState::modelview, m_placementWC);
+
+		// Necesario para tener en cuenta la matriz de transformación del mundo
+		// al modelo
+		rs->loadTrfm ( RenderState :: model , m_placementWC ) ;
 		m_gObject->draw();
 		rs->pop(RenderState::modelview);
 	}

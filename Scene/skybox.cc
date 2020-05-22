@@ -120,24 +120,30 @@ void DisplaySky(Camera *cam) {
 	// Store previous shader
 	ShaderProgram *prevShader;
 	prevShader = rs->getShader();
+
 	// Move Skybox to camera location, so that it always surrounds camera.
-	Vector3 camTrans = (-1.0)*cam->getPosition();
+	Vector3 camTrans = cam->getPosition();
 	skynode->translate(camTrans);
 	Trfm3D *m_transposeToCam = new Trfm3D();
 	m_transposeToCam->setTrans(camTrans);
-	rs->push(RenderState::modelview);
-	rs->addTrfm(RenderState::modelview, m_transposeToCam);
-	rs->pop(RenderState::modelview);
+
 	// Disable depth test.
 	glDisable(GL_DEPTH_TEST);
+
 	// Set skybox shader
 	ShaderProgram *skyBoxShader = skynode->getShader();
 	rs->setShader(skyBoxShader);
+
 	// Draw skybox object.
 	GObject *skyBoxObject = skynode->getGobject();
+	rs->push(RenderState::modelview);
+	//rs->addTrfm(RenderState::modelview, m_transposeToCam);
 	skyBoxObject->draw();
+	rs->pop(RenderState::modelview);
+
 	// Restore depth test
 	glEnable(GL_DEPTH_TEST);
+
 	// Set previous shader
 	rs->setShader(prevShader);
 

@@ -197,7 +197,7 @@ template<class V> void ShaderProgram::send_uniform(const std::string uname, cons
 void ShaderProgram::beforeDraw() {
 
 	Material *mat;
-	Texture *tex, *bMapTex, *specMapTex;
+	Texture *tex, *bMapTex, *specMapTex, *envMapTex;
 	RenderState *rs = RenderState::instance();
 	static char buffer[1024];
 
@@ -267,6 +267,13 @@ void ShaderProgram::beforeDraw() {
 			if (specMapTex != 0) {
 				specMapTex->bindGLUnit(Constants::gl_texunits::specular);
 				this->send_uniform("specmap", Constants::gl_texunits::specular); // Texture unit 2
+			}
+		}
+		if (this->has_capability("cube_env")){
+			envMapTex = mat->getSpecularMap();
+			if (envMapTex != 0) {
+				envMapTex->bindGLUnit(Constants::gl_texunits::envmap);
+				this->send_uniform("envmap", Constants::gl_texunits::envmap); // Texture unit 5
 			}
 		}
 	}
