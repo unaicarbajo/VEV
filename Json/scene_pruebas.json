@@ -61,11 +61,6 @@
     ],
     "shaders" : [
         {
-            "name" : "pervertex",
-            "vshader" : "Shaders/pervertex.vert",
-            "fshader" : "Shaders/pervertex.frag"
-        },
-        {
             "name" : "perfragment",
             "vshader" : "Shaders/perfragment.vert",
             "fshader" : "Shaders/perfragment.frag"

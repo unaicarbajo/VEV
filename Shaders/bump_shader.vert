@@ -52,6 +52,8 @@ varying vec3 f_spotDirection[4];  // tangent space
 
 void main() {
 
+	// Las variables se pasan al fragment sin normalizar!
+
 	gl_Position = modelToClipMatrix * vec4(v_position, 1.0);
 
 	vec3 T,B,N;

@@ -270,10 +270,15 @@ void ShaderProgram::beforeDraw() {
 			}
 		}
 		if (this->has_capability("cube_env")){
-			envMapTex = mat->getSpecularMap();
+			//envMapTex = mat->getEnMap();
+			envMapTex = TextureManager::instance()->find("CubeEnv");
 			if (envMapTex != 0) {
+				// Se activa la textura
 				envMapTex->bindGLUnit(Constants::gl_texunits::envmap);
+				// Se le asigna el valor de la unidad de textura "envmap" a la variable uniforme "envmap"
 				this->send_uniform("envmap", Constants::gl_texunits::envmap); // Texture unit 5
+				// Se le asigna la posición de la cámara a la variable uniforme "campos"
+				this->send_uniform("campos",rs->getCamera()->getPosition());
 			}
 		}
 	}

@@ -123,7 +123,6 @@ void DisplaySky(Camera *cam) {
 
 	// Move Skybox to camera location, so that it always surrounds camera.
 	Vector3 camTrans = cam->getPosition();
-	skynode->translate(camTrans);
 	Trfm3D *m_transposeToCam = new Trfm3D();
 	m_transposeToCam->setTrans(camTrans);
 
@@ -137,7 +136,7 @@ void DisplaySky(Camera *cam) {
 	// Draw skybox object.
 	GObject *skyBoxObject = skynode->getGobject();
 	rs->push(RenderState::modelview);
-	//rs->addTrfm(RenderState::modelview, m_transposeToCam);
+	rs->addTrfm(RenderState::modelview, m_transposeToCam);
 	skyBoxObject->draw();
 	rs->pop(RenderState::modelview);
 
