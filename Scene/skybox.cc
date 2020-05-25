@@ -125,6 +125,8 @@ void DisplaySky(Camera *cam) {
 	Vector3 camTrans = cam->getPosition();
 	Trfm3D *m_transposeToCam = new Trfm3D();
 	m_transposeToCam->setTrans(camTrans);
+	rs->push(RenderState::modelview);
+	rs->addTrfm(RenderState::modelview, m_transposeToCam);
 
 	// Disable depth test.
 	glDisable(GL_DEPTH_TEST);
@@ -134,10 +136,7 @@ void DisplaySky(Camera *cam) {
 	rs->setShader(skyBoxShader);
 
 	// Draw skybox object.
-	GObject *skyBoxObject = skynode->getGobject();
-	rs->push(RenderState::modelview);
-	rs->addTrfm(RenderState::modelview, m_transposeToCam);
-	skyBoxObject->draw();
+	skynode->getGobject()->draw();
 	rs->pop(RenderState::modelview);
 
 	// Restore depth test

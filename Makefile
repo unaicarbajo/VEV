@@ -1360,6 +1360,36 @@ Shading/materialManager.cc.s:
 	$(MAKE) -f CMakeFiles/browser_gobj.dir/build.make CMakeFiles/browser_gobj.dir/Shading/materialManager.cc.s
 .PHONY : Shading/materialManager.cc.s
 
+Shading/projectiveTexture.o: Shading/projectiveTexture.cc.o
+
+.PHONY : Shading/projectiveTexture.o
+
+# target to build an object file
+Shading/projectiveTexture.cc.o:
+	$(MAKE) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/Shading/projectiveTexture.cc.o
+	$(MAKE) -f CMakeFiles/browser_gobj.dir/build.make CMakeFiles/browser_gobj.dir/Shading/projectiveTexture.cc.o
+.PHONY : Shading/projectiveTexture.cc.o
+
+Shading/projectiveTexture.i: Shading/projectiveTexture.cc.i
+
+.PHONY : Shading/projectiveTexture.i
+
+# target to preprocess a source file
+Shading/projectiveTexture.cc.i:
+	$(MAKE) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/Shading/projectiveTexture.cc.i
+	$(MAKE) -f CMakeFiles/browser_gobj.dir/build.make CMakeFiles/browser_gobj.dir/Shading/projectiveTexture.cc.i
+.PHONY : Shading/projectiveTexture.cc.i
+
+Shading/projectiveTexture.s: Shading/projectiveTexture.cc.s
+
+.PHONY : Shading/projectiveTexture.s
+
+# target to generate assembly for a file
+Shading/projectiveTexture.cc.s:
+	$(MAKE) -f CMakeFiles/browser.dir/build.make CMakeFiles/browser.dir/Shading/projectiveTexture.cc.s
+	$(MAKE) -f CMakeFiles/browser_gobj.dir/build.make CMakeFiles/browser_gobj.dir/Shading/projectiveTexture.cc.s
+.PHONY : Shading/projectiveTexture.cc.s
+
 Shading/texture.o: Shading/texture.cc.o
 
 .PHONY : Shading/texture.o
@@ -1583,6 +1613,9 @@ help:
 	@echo "... Shading/materialManager.o"
 	@echo "... Shading/materialManager.i"
 	@echo "... Shading/materialManager.s"
+	@echo "... Shading/projectiveTexture.o"
+	@echo "... Shading/projectiveTexture.i"
+	@echo "... Shading/projectiveTexture.s"
 	@echo "... Shading/texture.o"
 	@echo "... Shading/texture.i"
 	@echo "... Shading/texture.s"

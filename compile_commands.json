@@ -121,6 +121,11 @@
 },
 {
   "directory": "/home/unaice/UNI/TERCERO/VEV/mg",
+  "command": "/usr/bin/c++   -I/home/unaice/UNI/TERCERO/VEV/mg/. -I/home/unaice/UNI/TERCERO/VEV/mg/Math -I/home/unaice/UNI/TERCERO/VEV/mg/Geometry -I/home/unaice/UNI/TERCERO/VEV/mg/Shading -I/home/unaice/UNI/TERCERO/VEV/mg/Shaders -I/home/unaice/UNI/TERCERO/VEV/mg/Camera -I/home/unaice/UNI/TERCERO/VEV/mg/Scene -I/home/unaice/UNI/TERCERO/VEV/mg/Misc -I/home/unaice/UNI/TERCERO/VEV/mg/Browser  -g   -o CMakeFiles/browser.dir/Shading/projectiveTexture.cc.o -c /home/unaice/UNI/TERCERO/VEV/mg/Shading/projectiveTexture.cc",
+  "file": "/home/unaice/UNI/TERCERO/VEV/mg/Shading/projectiveTexture.cc"
+},
+{
+  "directory": "/home/unaice/UNI/TERCERO/VEV/mg",
   "command": "/usr/bin/c++   -I/home/unaice/UNI/TERCERO/VEV/mg/. -I/home/unaice/UNI/TERCERO/VEV/mg/Math -I/home/unaice/UNI/TERCERO/VEV/mg/Geometry -I/home/unaice/UNI/TERCERO/VEV/mg/Shading -I/home/unaice/UNI/TERCERO/VEV/mg/Shaders -I/home/unaice/UNI/TERCERO/VEV/mg/Camera -I/home/unaice/UNI/TERCERO/VEV/mg/Scene -I/home/unaice/UNI/TERCERO/VEV/mg/Misc -I/home/unaice/UNI/TERCERO/VEV/mg/Browser  -g   -o CMakeFiles/browser.dir/Shaders/shaderUtils.cc.o -c /home/unaice/UNI/TERCERO/VEV/mg/Shaders/shaderUtils.cc",
   "file": "/home/unaice/UNI/TERCERO/VEV/mg/Shaders/shaderUtils.cc"
 },
@@ -333,6 +338,11 @@
   "directory": "/home/unaice/UNI/TERCERO/VEV/mg",
   "command": "/usr/bin/c++   -I/home/unaice/UNI/TERCERO/VEV/mg/. -I/home/unaice/UNI/TERCERO/VEV/mg/Math -I/home/unaice/UNI/TERCERO/VEV/mg/Geometry -I/home/unaice/UNI/TERCERO/VEV/mg/Shading -I/home/unaice/UNI/TERCERO/VEV/mg/Shaders -I/home/unaice/UNI/TERCERO/VEV/mg/Camera -I/home/unaice/UNI/TERCERO/VEV/mg/Scene -I/home/unaice/UNI/TERCERO/VEV/mg/Misc -I/home/unaice/UNI/TERCERO/VEV/mg/Browser  -g   -o CMakeFiles/browser_gobj.dir/Shading/imageManager.cc.o -c /home/unaice/UNI/TERCERO/VEV/mg/Shading/imageManager.cc",
   "file": "/home/unaice/UNI/TERCERO/VEV/mg/Shading/imageManager.cc"
+},
+{
+  "directory": "/home/unaice/UNI/TERCERO/VEV/mg",
+  "command": "/usr/bin/c++   -I/home/unaice/UNI/TERCERO/VEV/mg/. -I/home/unaice/UNI/TERCERO/VEV/mg/Math -I/home/unaice/UNI/TERCERO/VEV/mg/Geometry -I/home/unaice/UNI/TERCERO/VEV/mg/Shading -I/home/unaice/UNI/TERCERO/VEV/mg/Shaders -I/home/unaice/UNI/TERCERO/VEV/mg/Camera -I/home/unaice/UNI/TERCERO/VEV/mg/Scene -I/home/unaice/UNI/TERCERO/VEV/mg/Misc -I/home/unaice/UNI/TERCERO/VEV/mg/Browser  -g   -o CMakeFiles/browser_gobj.dir/Shading/projectiveTexture.cc.o -c /home/unaice/UNI/TERCERO/VEV/mg/Shading/projectiveTexture.cc",
+  "file": "/home/unaice/UNI/TERCERO/VEV/mg/Shading/projectiveTexture.cc"
 },
 {
   "directory": "/home/unaice/UNI/TERCERO/VEV/mg",

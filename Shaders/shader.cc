@@ -197,7 +197,7 @@ template<class V> void ShaderProgram::send_uniform(const std::string uname, cons
 void ShaderProgram::beforeDraw() {
 
 	Material *mat;
-	Texture *tex, *bMapTex, *specMapTex, *envMapTex;
+	Texture *tex;
 	RenderState *rs = RenderState::instance();
 	static char buffer[1024];
 
@@ -255,7 +255,7 @@ void ShaderProgram::beforeDraw() {
 			this->send_uniform("texture0", Constants::gl_texunits::texture); // Texture unit 0
 		}
 		if (this->has_capability("bump")){
-			bMapTex = mat->getBumpMap();
+			Texture *bMapTex = mat->getBumpMap();
 			if (bMapTex != 0) {
 				bMapTex->bindGLUnit(Constants::gl_texunits::bump);
 				this->send_uniform("bumpmap", Constants::gl_texunits::bump); // Texture unit 1
@@ -263,7 +263,7 @@ void ShaderProgram::beforeDraw() {
 		}
 
 		if (this->has_capability("specular")){
-			specMapTex = mat->getSpecularMap();
+			Texture *specMapTex = mat->getSpecularMap();
 			if (specMapTex != 0) {
 				specMapTex->bindGLUnit(Constants::gl_texunits::specular);
 				this->send_uniform("specmap", Constants::gl_texunits::specular); // Texture unit 2
@@ -271,7 +271,7 @@ void ShaderProgram::beforeDraw() {
 		}
 		if (this->has_capability("cube_env")){
 			//envMapTex = mat->getEnMap();
-			envMapTex = TextureManager::instance()->find("CubeEnv");
+			Texture *envMapTex = TextureManager::instance()->find("CubeEnv");
 			if (envMapTex != 0) {
 				// Se activa la textura
 				envMapTex->bindGLUnit(Constants::gl_texunits::envmap);

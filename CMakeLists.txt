@@ -25,7 +25,7 @@ set(SOURCES
   Geometry/triangleMeshGL.cc
   Shading/light.cc Shading/material.cc Shading/texture.cc Shading/texturert.cc
   Shading/image.cc Shading/textureManager.cc Shading/materialManager.cc
-  Shading/lightManager.cc Shading/imageManager.cc
+  Shading/lightManager.cc Shading/imageManager.cc Shading/projectiveTexture.cc
   Shaders/shaderUtils.cc Shaders/shaderManager.cc Shaders/shader.cc Shaders/uniform.cc
   Camera/camera.cc Camera/avatar.cc Camera/cameraManager.cc Camera/avatarManager.cc
   Scene/node.cc Scene/nodeManager.cc Scene/renderState.cc Scene/scene.cc Scene/skybox.cc

@@ -159,6 +159,8 @@ void main() {
 	specular_color = vec3(0.0,0.0,0.0);
 	//gl_FragColor = vec4(1.0);
 
+	// Hago el cálculo de I de la forma p_srm - c_srm ya que
+	// la función reflect hace los cálculos de la forma I - 2.0 * dot(N, I) * N
 	vec3 I = normalize(f_positionw-campos);
 
 	// El cálculo de R sería R = 2*(n_scm*I)n_scm - I
@@ -188,6 +190,7 @@ void main() {
 	f_color.a = theMaterial.alpha; 	// 1.0 = canal alpha (total transparencia)
 									// 0.0 = totalmente opaco
 
-	gl_FragColor = vec4(textureCube(envmap,R).rgb,1.0)*f_color;
-
+	vec4 texColor = texture2D(texture0,f_texCoord);
+	vec4 texelEnv = vec4(textureCube(envmap,R).rgb,1.0);
+	gl_FragColor = texColor*texelEnv*f_color;
 }
