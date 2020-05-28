@@ -10,6 +10,7 @@
 #include "texture.h"
 #include "material.h"
 #include "renderState.h"
+#include "projectiveTexture.h"
 
 static void init_uniform(std::map<std::string, Uniform> & h,
 						 const char * uname,
@@ -270,7 +271,6 @@ void ShaderProgram::beforeDraw() {
 			}
 		}
 		if (this->has_capability("cube_env")){
-			//envMapTex = mat->getEnMap();
 			Texture *envMapTex = TextureManager::instance()->find("CubeEnv");
 			if (envMapTex != 0) {
 				// Se activa la textura
@@ -280,6 +280,24 @@ void ShaderProgram::beforeDraw() {
 				// Se le asigna la posición de la cámara a la variable uniforme "campos"
 				this->send_uniform("campos",rs->getCamera()->getPosition());
 			}
+		}
+		if (this->has_capability("projective")){
+			ProjectiveTexture *projTex = new ProjectiveTexture("obj/batman.jpg","projCamera");
+			if (projTex != 0){
+				Texture *tex = projTex->getTexture();
+				if (tex != 0){
+					tex->bindGLUnit(Constants::gl_texunits::projective);
+
+					this->send_uniform("projectivemap",Constants::gl_texunits::projective);
+
+					this->send_uniform("projectiveMatrix",projTex->getMatrix());
+				}
+			}
+		}
+		if (this->has_capability("shadow")){
+			// Primera renderización
+
+			// Segunda renderización
 		}
 	}
 }

@@ -1,8 +1,5 @@
 #version 120
 
-// FUENTES:
-// Cálculo de R: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/reflect.xhtml
-
 uniform int active_lights_n; // Number of active lights (< MG_MAX_LIGHT)
 uniform vec3 scene_ambient; // Scene ambient light
 
@@ -26,17 +23,19 @@ uniform struct material_t {
 uniform vec3 campos; // Camera position in world space
 
 uniform sampler2D texture0;   // Texture
-uniform samplerCube envmap;   // Environment map (cubemap)
+uniform sampler2D projectivemap; // Textura proyectiva
 
 varying vec3 f_position;      // camera space
 varying vec3 f_viewDirection; // camera space
 varying vec3 f_normal;        // camera space
 varying vec2 f_texCoord;
+// Utilizadas en el cálculo de R
+varying vec3 f_positionw;    // world space
+varying vec3 f_normalw;      // world space
 
 varying vec4 f_ptexCoord;      // Coordenada de la textura proyectiva
 
 vec4 f_color;
-
 
 // Dado un vector de una luz y la normal obtener la aportación lambertiana
 // Recordar: el vector de la luz va del revés
@@ -156,19 +155,6 @@ void main() {
 	normalEye = normalize(f_normal); 
 	diffuse_color = vec3(0.0,0.0,0.0);
 	specular_color = vec3(0.0,0.0,0.0);
-	//gl_FragColor = vec4(1.0);
-
-	// Hago el cálculo de I de la forma p_srm - c_srm ya que
-	// la función reflect hace los cálculos de la forma I - 2.0 * dot(N, I) * N
-	vec3 I = normalize(f_positionw-campos);
-
-	// El cálculo de R sería R = 2*(n_scm*I)n_scm - I
-	// Utilizo la función de OpenGL "reflect(...)", que calcula la dirección de reflejo
-	// del vector incidente I, teniendo la normal N.
-	// Sería el equivalente a hacer I - 2.0 * dot(N, I) * N.
-
-	vec3 R = reflect(I,normalize(f_normalw));
-	R.z = (-1.0)*R.z;
 	for (int i = 0; i < active_lights_n; i++){
 		//////////// DIRECCIONAL /////////////
 		if (theLights[i].position[3] == 0){
@@ -190,6 +176,7 @@ void main() {
 									// 0.0 = totalmente opaco
 
 	vec4 texColor = texture2D(texture0,f_texCoord);
-	vec4 texelEnv = vec4(textureCube(envmap,R).rgb,1.0);
-	gl_FragColor = texColor*texelEnv*f_color;
+    vec4 texProj = texture2DProj(projectivemap,f_ptexCoord);
+	// color_textura * color (interpolado)
+	gl_FragColor = texColor * f_color + texProj;
 }

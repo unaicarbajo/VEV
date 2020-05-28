@@ -92,6 +92,16 @@
             "fshader" : "Shaders/bump_shader.frag",
 			"uniforms" : [ {"name" : "bumpmap", "type" : "usampler"} ],
 			"capabilities" : [ "bump" ]
+        },
+        {
+            "name" : "projective",
+            "vshader" : "Shaders/projective.vert",
+            "fshader" : "Shaders/projective.frag",
+            "uniforms" : [
+            { "name" : "projectivemap", "type" : "usampler" } ,
+            { "name" : "projectiveMatrix", "type" : "umat4" }
+            ],
+            "capabilities" : [ "projective" ]
         }
     ],
     "lights" : [
@@ -132,7 +142,7 @@
             "switched" : 0
         }
     ],
-    " textures " : [
+    "textures" : [
         {
         "name" : "obj/batman.jpg" ,
         "type" : "proj"
@@ -141,7 +151,7 @@
     "node" : {
         "name" : "root",
         "trfm" : [ { "trans" : [0, -10, -100] } ],
-        "shader" : "perfragment",
+        "shader" : "projective",
         "children" : [
             {
                 "name" : "smooth",

@@ -13,15 +13,15 @@ using std::string;
 
 ProjectiveTexture::ProjectiveTexture(const std::string & texName,const std::string & camName):
     m_camName(camName),
-    m_texName(texName),
+    m_tex(TextureManager::instance()->find(texName)),
     m_projTrfm(new Trfm3D())
     {
         createProjectiveTrfm();
     }
 
 Texture *ProjectiveTexture::getTexture(){
-    TextureManager *texManager = TextureManager::instance();
-    return texManager->find(this->m_texName);
+
+    return m_tex;
 }
 
 Trfm3D &ProjectiveTexture::getMatrix(){
@@ -48,6 +48,7 @@ void ProjectiveTexture::createProjectiveTrfm(){
     //      | 0   0   1/2 1/2 |
     //      | 0   0   0   1   |
     // Mts utilizado para realizar (P.p+1)/2    Siendo P.p cada elemento del punto
+    // con el fin de mapear de coordenadas establecidas en [-1,1] a [0,1]
 
     m_projTrfm->setTrans(*new Vector3(0.5f,0.5f,0.5f));
     m_projTrfm->addScale(0.5f);
@@ -59,4 +60,12 @@ void ProjectiveTexture::createProjectiveTrfm(){
     // Se multiplica matriz Mb
     const Trfm3D *mb = cam->viewTrfm();
     m_projTrfm->add(mb);
+}
+
+void ProjectiveTexture::PlaceScene(){
+    //RenderState *rs = RenderState::instance();
+	//Trfm3D &modelView = rs->top(RenderState::modelview);
+    //Vector3 at =
+    //Vector3 up =
+    //Vector3 E = modelView.transformpoint();
 }
