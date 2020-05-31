@@ -281,17 +281,15 @@ void ShaderProgram::beforeDraw() {
 				this->send_uniform("campos",rs->getCamera()->getPosition());
 			}
 		}
-		if (this->has_capability("projective")){
+		if (this->has_capability("projective")){								// Texture unit 3
 			ProjectiveTexture *projTex = new ProjectiveTexture("obj/batman.jpg","projCamera");
-			if (projTex != 0){
-				Texture *tex = projTex->getTexture();
-				if (tex != 0){
-					tex->bindGLUnit(Constants::gl_texunits::projective);
+			Texture *tex = projTex->getTexture();
+			if (tex != 0){
+				tex->bindGLUnit(Constants::gl_texunits::projective);
 
-					this->send_uniform("projectivemap",Constants::gl_texunits::projective);
+				this->send_uniform("projectivemap",Constants::gl_texunits::projective);
+				this->send_uniform("projectiveMatrix",projTex->getMatrix());
 
-					this->send_uniform("projectiveMatrix",projTex->getMatrix());
-				}
 			}
 		}
 		if (this->has_capability("shadow")){

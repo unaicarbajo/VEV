@@ -33,7 +33,9 @@ varying vec3 f_viewDirection; // camera space
 varying vec3 f_normal;        // camera space
 varying vec2 f_texCoord;
 
-varying vec4 f_ptexCoord;      // Coordenada de la textura proyectiva
+// Utilizadas en el cálculo de R
+varying vec3 f_positionw;    // world space
+varying vec3 f_normalw;      // world space
 
 vec4 f_color;
 
