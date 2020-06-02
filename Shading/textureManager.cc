@@ -27,6 +27,9 @@ TextureManager::~TextureManager() {
 	for(map<string, Texture *>::iterator it = m_hash.begin(), end = m_hash.end();
 		it != end; ++it)
 		delete it->second;
+	for(map<string, ProjectiveTexture *>::iterator it = m_hashProj.begin(), end = m_hashProj.end();
+		it != end; ++it)
+		delete it->second;
 }
 
 Texture *TextureManager::create(const std::string & fName) {
@@ -61,7 +64,13 @@ Texture *TextureManager::createProj(const std::string & fName) {
 	}
 	Texture * newtex = new Texture(fName);
 	newtex->setProj(fName);
+
 	it = m_hash.insert(make_pair(fName, newtex)).first;
+
+	// Se añade la textura projectiva al hashmap de texturas projectivas
+	ProjectiveTexture * newProjTex = new ProjectiveTexture(fName,"projCamera");
+	m_hashProj.insert(make_pair(fName, newProjTex));
+
 	return it->second;
 }
 
@@ -121,4 +130,12 @@ void TextureManager::print() const {
 	for(map<string, Texture *>::const_iterator it = m_hash.begin(), end = m_hash.end();
 		it != end; ++it)
 		it->second->print();
+}
+
+// Manage projective Textures
+
+ProjectiveTexture *TextureManager::findProjective(const std::string & fName) const {
+	map<string, ProjectiveTexture *>::const_iterator it = m_hashProj.find(fName);
+	if (it == m_hashProj.end()) return 0;
+	return it->second;
 }

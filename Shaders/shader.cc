@@ -282,14 +282,20 @@ void ShaderProgram::beforeDraw() {
 			}
 		}
 		if (this->has_capability("projective")){								// Texture unit 3
-			ProjectiveTexture *projTex = new ProjectiveTexture("obj/batman.jpg","projCamera");
-			Texture *tex = projTex->getTexture();
-			if (tex != 0){
+			// Busca en el hashmap de ProjectiveTexture definido en el gestor de texturas TextureManager
+			// la textura proyectiva con el nombre "obj/batman.jpg" (este nombre es variable dependiendo
+			// de la textura deseada). En caso de no estar definida esta textura (clase "Texture"),
+			// el hashmap de ProjectiveTexture no tendría incluido la textura proyectiva asociada. Por
+			// lo que en caso de existir el objeto de clase ProjectiveTexture, implicaría que la textura
+			// (clase "Texture") existe.
+			ProjectiveTexture *projTex = TextureManager::instance()->findProjective("obj/batman.jpg");
+			// Solo hay que comprobar si existe ProjectiveTexture
+			// Si existe ProjectiveTexture => existe Texture asociada
+			if (projTex != 0){
+				Texture *tex = projTex->getTexture();
 				tex->bindGLUnit(Constants::gl_texunits::projective);
-
 				this->send_uniform("projectivemap",Constants::gl_texunits::projective);
 				this->send_uniform("projectiveMatrix",projTex->getMatrix());
-
 			}
 		}
 		if (this->has_capability("shadow")){

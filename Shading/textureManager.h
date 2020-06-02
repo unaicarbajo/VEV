@@ -7,6 +7,7 @@
 #include "mgriter.h"
 #include "texture.h"
 #include "texturert.h"
+#include "projectiveTexture.h"
 
 class TextureManager {
 
@@ -47,6 +48,14 @@ public:
 	TextureRT *createColorMap(const std::string & texName, int height, int width);
 
 	/**
+	 * Get a registered projective texture
+	 *
+	 * @param fName: The file name of the texture
+	 * @return the texture or 0 if not found
+	 */
+	ProjectiveTexture *findProjective(const std::string & fName) const;
+	
+	/**
 	 * Get a registered texture
 	 *
 	 * @param fName: The file name of the texture
@@ -81,4 +90,5 @@ private:
 	Texture *m_white;
 	std::map<std::string, Texture *> m_hash;
 
+	std::map<std::string, ProjectiveTexture *> m_hashProj;	// Hashmap de texturas projectivas
 };

@@ -77,6 +77,8 @@ public:
 
 	Vector3 getUp() const;		  //!< Get camera up vector in world coordinates.
 
+	Vector3 getAt() const;		  //!< Get camera at vector in world coordinates.
+
 	////////////////////////////////////////////////
 	// trfm transformations
 

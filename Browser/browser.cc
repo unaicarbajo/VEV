@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "scenes.h"
 #include "skybox.h"
+#include "textureManager.h"
 
 // global variables
 static float step = 0.5; // advance/retreat step
@@ -225,6 +226,8 @@ static void Render(Camera *theCamera) {
 		if(!it->isOn()) continue;
 		it->placeScene();
 	}
+	ProjectiveTexture *projTex = TextureManager::instance()->findProjective("obj/batman.jpg");
+	if (projTex != 0) projTex->placeScene();
 
 	Scene::instance()->draw();
 }
