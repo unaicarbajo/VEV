@@ -298,11 +298,6 @@ void ShaderProgram::beforeDraw() {
 				this->send_uniform("projectiveMatrix",projTex->getMatrix());
 			}
 		}
-		if (this->has_capability("shadow")){
-			// Primera renderización
-
-			// Segunda renderización
-		}
 	}
 }
 

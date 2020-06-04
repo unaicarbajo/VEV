@@ -220,14 +220,17 @@ static void Render(Camera *theCamera) {
 	if (check_cull) check_cull_camera();
 	DisplaySky(theCamera);
 
+	// Textura proyectiva
+	ProjectiveTexture *projTex = TextureManager::instance()->findProjective("obj/batman.jpg");
+	if (projTex != 0) projTex->placeScene();
+
 	// place lights into scene
 	for(LightManager::iterator it = lmgr->begin(), end = lmgr->end();
 		it != end; ++it) {
 		if(!it->isOn()) continue;
 		it->placeScene();
 	}
-	ProjectiveTexture *projTex = TextureManager::instance()->findProjective("obj/batman.jpg");
-	if (projTex != 0) projTex->placeScene();
+
 
 	Scene::instance()->draw();
 }

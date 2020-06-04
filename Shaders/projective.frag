@@ -177,6 +177,6 @@ void main() {
 
 	vec4 texColor = texture2D(texture0,f_texCoord);
     vec4 texProj = texture2DProj(projectivemap,f_ptexCoord);
-	// color_textura * color (interpolado)
+	// gl_FragColor = color_por_iluminacion_y_textura + color_textura_proyectiva * factor;
 	gl_FragColor = texColor * f_color + texProj * 0.8;
 }

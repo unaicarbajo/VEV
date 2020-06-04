@@ -201,14 +201,6 @@ public:
 
 	void print() const;
 
-	void setShadowTexture() const;
-
-	void setShadowTrfm() const;
-
-	TextureRT *getShadowTexture();
-	
-	Trfm3D *getShadowTrfm();
-
 private:
 	RenderState();
 	~RenderState();
@@ -250,8 +242,4 @@ private:
 
 	Node *m_skybox;
 
-	// Shadow
-
-	TextureRT *m_shadowTex;
-	Trfm3D	*m_shadowTrfm;
 };

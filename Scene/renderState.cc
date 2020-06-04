@@ -14,9 +14,8 @@ RenderState::RenderState() :
 	m_camera(0),
 	m_ambient(Vector3(0.05f, 0.05f, 0.05)),
 	m_activeShader(0),
-	m_drawBBox(false),
-	m_shadowTex(0),
-	m_shadowTrfm(0) {}
+	m_drawBBox(false)
+	{}
 
 RenderState::~RenderState() {}
 
@@ -200,15 +199,4 @@ void RenderState::print() const {
 
 	printf("Shader: %s\n", m_activeShader ? m_activeShader->getName() : "NULL");
 	bool m_drawBBox;
-}
-//Texture RenderState::setShadowTexture(){
-//	return m_shadowTex;
-//}
-
-
-TextureRT *RenderState::getShadowTexture(){
-	return m_shadowTex;
-}
-Trfm3D *RenderState::getShadowTrfm(){
-	return m_shadowTrfm;
 }
